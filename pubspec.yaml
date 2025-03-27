@@ -1,0 +1,35 @@
+name: mi_hospital
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  cloud_firestore: ^5.6.5
+  cupertino_icons: ^1.0.8
+  firebase_auth: ^5.5.1
+  firebase_core: ^3.12.1
+  firebase_database: ^11.3.4
+  flutter:
+    sdk: flutter
+  fluttertoast: ^8.2.12
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/log/logo.png
+    - assets/images/buttons/ajustes.png
+    - assets/images/buttons/habitaciones.png
+    - assets/images/buttons/pacientes.png
+    - assets/images/buttons/perfil.png
+    - assets/images/buttons/tareas.png
+    - assets/images/buttons/personal.png

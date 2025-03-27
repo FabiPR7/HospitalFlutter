@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "173515216653",
+    "project_id": "mi-hospital-flutter",
+    "storage_bucket": "mi-hospital-flutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173515216653:android:d983e07697ccfc0dcb4244",
+        "android_client_info": {
+          "package_name": "com.example.mi_hospital"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4qGl5ke7MnR9O_6Sj7e86v5OV6J5vGCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
