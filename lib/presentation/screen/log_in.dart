@@ -6,6 +6,7 @@ class LogInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Image.asset("assets/images/log/logo.png", height: 50),

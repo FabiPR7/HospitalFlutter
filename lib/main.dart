@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mi_hospital/domain/sqlite/Sqlite.dart';
 import 'package:mi_hospital/firebase_options.dart';
 import 'package:mi_hospital/presentation/screen/main_menu.dart';
 
@@ -18,11 +19,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     var userLogin = DatabaseHelper().getFirstUser();
     return MaterialApp(
       title: 'Mi Hospital',
       debugShowCheckedModeBanner: false,
       theme: ThemeHospital(color: 5).themeData(),
-      home: SignInScreen(),
+      home: userLogin != null ? MainMenuScreen() :SignInScreen(),
     );
   }
 }

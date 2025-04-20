@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mi_hospital/domain/Firebase/UserFirebase.dart';
+import 'package:mi_hospital/domain/sqlite/Sqlite.dart';
 import 'package:mi_hospital/presentation/screen/log_in.dart';
 import 'package:mi_hospital/presentation/screen/main_menu.dart';
 import 'package:mi_hospital/presentation/widgets/log_Sign/widgets_Log_In.dart';
@@ -71,13 +72,17 @@ class WidgetsSignIn {
                 ],
               ),
               ElevatedButton(
-                onPressed: () async {
+                onPressed: () async { 
                   if (!verificationFieldsVoid()) {
                     if (await Userfirebase().loginUser(
                       controllerEmail.value.text,
                       controllerPassword.value.text,
                       context,
                     )) {
+                       Map<String, dynamic>? datos =  await Userfirebase().getUserByEmail(controllerEmail.value.text);
+                       if(datos != null) {
+                      DatabaseHelper().initDB();
+                      DatabaseHelper().insertUserSQlite(datos?['name'] as String, datos?['email'] as String, datos?['codigo'] as String);
                       await Future.delayed(Duration(seconds: 2));
                       Navigator.push(
                         context,
@@ -85,6 +90,7 @@ class WidgetsSignIn {
                           builder: (context) => MainMenuScreen(),
                         ),
                       );
+                    }
                     }
                   } else {
                     WidgetsLogIn().getToastMessage(

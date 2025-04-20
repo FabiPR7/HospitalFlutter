@@ -89,4 +89,27 @@ class Userfirebase {
       return false;
     }
   }
+  Future<Map<String, dynamic>?> getUserByEmail(String email) async {
+  try {
+    final DatabaseReference usersRef = FirebaseDatabase.instance.ref().child('users');
+    final DatabaseEvent event = await usersRef
+        .orderByChild('email')
+        .equalTo(email)
+        .once();
+    if (event.snapshot.value != null) {
+      final Map<dynamic, dynamic> users = event.snapshot.value as Map<dynamic, dynamic>;
+      final Map<dynamic, dynamic> userData = users.values.first;
+      return {
+        'codigo': userData['codigo']?.toString(),
+        'email': userData['email']?.toString(),
+        'name': userData['name']?.toString(),
+      };
+    } else {
+      return null; 
+    }
+  } catch (e) {
+    print('Error al buscar usuario: $e');
+    return null;
+  }
+}
 }
