@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mi_hospital/domain/sqlite/Sqlite.dart';
-import 'package:mi_hospital/presentation/widgets/main_menu/widgets_main_menu.dart';
+import 'package:mi_hospital/appConfig/domain/Firebase/UserFirebase.dart';
+import 'package:mi_hospital/appConfig/domain/sqlite/Sqlite.dart';
+import 'package:mi_hospital/main.dart';
+import 'package:mi_hospital/sections/Rooms/presentation/RoomScreen.dart';
+import 'package:mi_hospital/sections/Patients/presentation/PatientsScreen.dart';
+import 'package:mi_hospital/sections/Staff/presentation/StaffScreen.dart';
+import 'package:mi_hospital/sections/menu_main/presentation/widgets_main_menu.dart';
+import 'package:mi_hospital/sections/tasks/presentation/tasks.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
@@ -11,6 +17,7 @@ class MainMenuScreen extends StatefulWidget {
 
 class _MainMenuScreenState extends State<MainMenuScreen> {
   String userName = '';
+  String code = "";
   bool isSwitchOn = true;
   @override
   void initState() {
@@ -19,9 +26,12 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   }
 
   void cargarNombreUsuario() async {
-    final nombre = await DatabaseHelper().getUserName();
+    String? nombre = await DatabaseHelper().getUserName();
+    String? codigo = await DatabaseHelper().getUserCode();
     setState(() {
+      nombre = nombre?.replaceAll("}", "");
       userName = nombre ?? 'Invitado';
+      code = codigo!;
     });
   }
 
@@ -49,6 +59,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       setState(() {
                         isSwitchOn = value;
                       });
+                      Userfirebase().updateUserStateByCode(code, value);
                     },
                     activeColor: const Color.fromARGB(255, 20, 84, 223),
                   ),
@@ -61,15 +72,36 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 children: [
                   WidgetsMainMenu().imageButtonBySrc(
                     "assets/images/buttons/habitaciones.png",
-                    130, isSwitchOn
+                    130, isSwitchOn,() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HabitacionesScreen(),
+                        ),
+                      );
+                    }
                   ),
                   WidgetsMainMenu().imageButtonBySrc(
                     "assets/images/buttons/pacientes.png",
-                    135,isSwitchOn
+                    135,isSwitchOn,() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PacientesScreen(),
+                        ),
+                      );
+                    }
                   ),
                   WidgetsMainMenu().imageButtonBySrc(
                     "assets/images/buttons/personal.png",
-                    130,isSwitchOn
+                    130,isSwitchOn, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StaffScreen(),
+                        ),
+                      );
+                    }
                   ),
                 ],
               ),
@@ -88,7 +120,14 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   ),
                   WidgetsMainMenu().imageButtonBySrc(
                     "assets/images/buttons/tareas.png",
-                    132,isSwitchOn
+                    132,isSwitchOn, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TasksScreen(codePrefix: GetData().getHospitalCode(),),
+                        ),
+                      );
+                    }
                   ),
                 ],
               ),

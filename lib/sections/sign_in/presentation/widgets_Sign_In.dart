@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mi_hospital/domain/Firebase/UserFirebase.dart';
-import 'package:mi_hospital/domain/sqlite/Sqlite.dart';
-import 'package:mi_hospital/presentation/screen/log_in.dart';
-import 'package:mi_hospital/presentation/screen/main_menu.dart';
-import 'package:mi_hospital/presentation/widgets/log_Sign/widgets_Log_In.dart';
+import 'package:mi_hospital/appConfig/domain/Firebase/UserFirebase.dart';
+import 'package:mi_hospital/appConfig/domain/sqlite/Sqlite.dart';
+import 'package:mi_hospital/main.dart';
+import 'package:mi_hospital/sections/log_in/presentation/log_in.dart';
+import 'package:mi_hospital/sections/menu_main/presentation/main_menu.dart';
+import 'package:mi_hospital/sections/log_in/presentation/widgets_Log_In.dart';
 
 class WidgetsSignIn {
   final controllerEmail = TextEditingController();
@@ -84,6 +85,7 @@ class WidgetsSignIn {
                       DatabaseHelper().initDB();
                       DatabaseHelper().insertUserSQlite(datos?['name'] as String, datos?['email'] as String, datos?['codigo'] as String);
                       await Future.delayed(Duration(seconds: 2));
+                      await GetData().rechargeData();
                       Navigator.push(
                         context,
                         MaterialPageRoute(

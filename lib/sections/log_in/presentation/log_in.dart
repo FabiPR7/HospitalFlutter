@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mi_hospital/presentation/widgets/log_Sign/widgets_Log_In.dart';
+import 'package:mi_hospital/appConfig/presentation/AppBar.dart';
+import 'package:mi_hospital/sections/log_in/presentation/widgets_Log_In.dart';
 
 class LogInScreen extends StatelessWidget {
   const LogInScreen({super.key});
@@ -8,10 +9,7 @@ class LogInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      appBar: AppBar(
-        title: Image.asset("assets/images/log/logo.png", height: 50),
-        backgroundColor: const Color(0xFF2196F3),
-      ),
+      appBar: AppBarHospital().getAppBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [

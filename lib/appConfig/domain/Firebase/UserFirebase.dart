@@ -4,8 +4,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:mi_hospital/domain/entities/User.dart';
-import 'package:mi_hospital/presentation/widgets/log_Sign/widgets_Log_In.dart';
+import 'package:mi_hospital/appConfig/domain/entities/User.dart';
+import 'package:mi_hospital/sections/log_in/presentation/widgets_Log_In.dart';
 
 class Userfirebase {
   final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
@@ -89,6 +89,7 @@ class Userfirebase {
       return false;
     }
   }
+  
   Future<Map<String, dynamic>?> getUserByEmail(String email) async {
   try {
     final DatabaseReference usersRef = FirebaseDatabase.instance.ref().child('users');
@@ -111,5 +112,30 @@ class Userfirebase {
     print('Error al buscar usuario: $e');
     return null;
   }
+}
+
+Future<void> updateUserStateByCode(String codeValue, bool newState) async {
+  final databaseRef = FirebaseDatabase.instance.ref();
+
+  try {
+    final snapshot = await databaseRef.child('users')
+        .orderByChild('codigo')
+        .equalTo(codeValue)
+        .get();
+    
+    if (snapshot.exists) {
+      final data = snapshot.value as Map;
+      data.forEach((key, value) async {
+        await databaseRef.child('users').child(key).update({
+          'state': newState,
+        });
+      });
+    } else {
+      
+    }
+  } catch (e) {
+    print(e);
+  }
+
 }
 }

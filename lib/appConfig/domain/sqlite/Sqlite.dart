@@ -41,7 +41,7 @@ Future<Database> initDB() async {
   try {
     final List<Map<String, dynamic>> result = await db.query(
       'usuario',
-      limit: 1  // Solo obtener el primer registro para eficiencia
+      limit: 1  
     );
     
     return result.isNotEmpty ? result.first : null;
@@ -70,6 +70,40 @@ Future<String?> getUserName() async {
     await db.close(); 
   }
 }
+
+Future<String?> getUserCode() async {
+  final db = await DatabaseHelper().initDB();
+  try {
+    final List<Map<String, dynamic>> result = await db.query(
+      'usuario',          
+      columns: ['codigo'], 
+      limit: 1,           
+    );
+    if (result.isNotEmpty) {
+      return result.first['codigo'] as String?; 
+    }
+    return null; 
+  } catch (e) {
+    return null;
+  } finally {
+    await db.close(); 
+  }
+}
+
+Future<String?> getHospitalCode() async {
+  try {
+    String? userCode = await getUserCode();
+    final parts = userCode?.split('-');
+    
+    if (parts!.isNotEmpty) {
+      return parts.first; 
+    }
+    return null;
+  } catch (e) {
+    return null; 
+  }
+}
+
 
 }
 

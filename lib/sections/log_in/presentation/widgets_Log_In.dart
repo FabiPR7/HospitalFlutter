@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mi_hospital/domain/Firebase/UserFirebase.dart';
-import 'package:mi_hospital/domain/entities/User.dart';
+import 'package:mi_hospital/appConfig/domain/Firebase/UserFirebase.dart';
+import 'package:mi_hospital/appConfig/domain/entities/User.dart';
 
 class WidgetsLogIn {
   final controllerName = TextEditingController();

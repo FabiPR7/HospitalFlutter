@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mi_hospital/domain/sqlite/Sqlite.dart';
-import 'package:sqflite/sqlite_api.dart';
 
 class WidgetsMainMenu {
 
-  Widget imageButtonBySrc(String src, double h, bool enabled) {
+  Widget imageButtonBySrc(String src, double h, bool enabled, [VoidCallback? onPressed]) {
   return Opacity(
-    opacity: enabled ? 1.0 : 0.4, // 🔥 más opaco si está deshabilitado
+    opacity: enabled ? 1.0 : 0.4,
     child: IconButton(
-      onPressed: enabled ? () {
-        // Tu acción al presionar
-      } : null, // 🔒 desactiva si está en false
+      onPressed: enabled ? onPressed : null,
       icon: Image.asset(src, height: h),
     ),
   );
