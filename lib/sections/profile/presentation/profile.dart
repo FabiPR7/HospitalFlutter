@@ -3,7 +3,7 @@ import 'package:mi_hospital/appConfig/presentation/AppBar.dart';
 import 'package:mi_hospital/main.dart';
 import 'package:mi_hospital/sections/profile/presentation/widgets_profile.dart';
 
-class PerfilPage extends StatelessWidget {
+class ProfilePage extends StatelessWidget {
 
   var userLogin = GetData().getUserLogin();
 

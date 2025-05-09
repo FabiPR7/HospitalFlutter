@@ -1,5 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:mi_hospital/sections/Rooms/entities/Room.dart';
+import 'package:mi_hospital/sections/rooms/entities/Room.dart';
 
 class HabitacionFirebase {
   Future<List<Room>> getRoomsByHospitalCode(String hospitalCode) async {

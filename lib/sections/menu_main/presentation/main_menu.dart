@@ -6,6 +6,8 @@ import 'package:mi_hospital/sections/Rooms/presentation/RoomScreen.dart';
 import 'package:mi_hospital/sections/Patients/presentation/PatientsScreen.dart';
 import 'package:mi_hospital/sections/Staff/presentation/StaffScreen.dart';
 import 'package:mi_hospital/sections/menu_main/presentation/widgets_main_menu.dart';
+import 'package:mi_hospital/sections/profile/presentation/profile.dart';
+import 'package:mi_hospital/sections/settings/presentation/setting.dart';
 import 'package:mi_hospital/sections/tasks/presentation/tasks.dart';
 
 class MainMenuScreen extends StatefulWidget {
@@ -76,7 +78,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HabitacionesScreen(),
+                          builder: (context) => RoomScreen(),
                         ),
                       );
                     }
@@ -112,11 +114,25 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 children: [
                   WidgetsMainMenu().imageButtonBySrc(
                     "assets/images/buttons/ajustes.png",
-                    130,isSwitchOn
+                    130,isSwitchOn,() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SettingsScreen(),
+                        ),
+                      );
+                    }
                   ),
                   WidgetsMainMenu().imageButtonBySrc(
                     "assets/images/buttons/perfil.png",
-                    132,isSwitchOn
+                    132,isSwitchOn,() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfilePage(),
+                        ),
+                      );
+                    }
                   ),
                   WidgetsMainMenu().imageButtonBySrc(
                     "assets/images/buttons/tareas.png",

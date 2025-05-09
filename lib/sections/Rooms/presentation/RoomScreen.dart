@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mi_hospital/appConfig/presentation/AppBar.dart';
 import 'package:mi_hospital/main.dart';
-import 'package:mi_hospital/sections/Rooms/entities/Room.dart';
-import 'package:mi_hospital/sections/Rooms/presentation/widgets_Room.dart';
+import 'package:mi_hospital/sections/rooms/entities/Room.dart';
+import 'package:mi_hospital/sections/rooms/presentation/widgets_Room.dart';
 
-class HabitacionesScreen extends StatefulWidget {
-  const HabitacionesScreen({super.key});
+class RoomScreen extends StatefulWidget {
+  const RoomScreen({super.key});
 
   @override
-  State<HabitacionesScreen> createState() => _HabitacionesScreenState();
+  State<RoomScreen> createState() => _RoomScreenState();
 }
 
-class _HabitacionesScreenState extends State<HabitacionesScreen> {
+class _RoomScreenState extends State<RoomScreen> {
 
 
   void _showAddRoomDialog() {

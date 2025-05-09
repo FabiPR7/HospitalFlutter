@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:mi_hospital/sections/Rooms/entities/Room.dart';
 import 'package:mi_hospital/sections/Rooms/entities/RoomFirebase.dart';
 
-class WidgetsHabitacion extends StatefulWidget {
+
+
+class WidgetsRoom extends StatefulWidget {
   final String hospitalCode;
 
-  const WidgetsHabitacion({super.key, required this.hospitalCode});
+  const WidgetsRoom({super.key, required this.hospitalCode});
 
   @override
-  State<WidgetsHabitacion> createState() => _WidgetsHabitacionState();
+  State<WidgetsRoom> createState() => _WidgetsRoomState();
 }
 
-class _WidgetsHabitacionState extends State<WidgetsHabitacion> {
+class _WidgetsRoomState extends State<WidgetsRoom> {
   List<Room> rooms = [];
   bool isLoading = true;
 
@@ -26,8 +28,10 @@ class _WidgetsHabitacionState extends State<WidgetsHabitacion> {
     final fetchedRooms = await habitacionFirebase.getRoomsByHospitalCode(
       widget.hospitalCode,
     );
+   //Room(id: '', name: 'jaja', stretches: 10, floor: 1, available: 10, code: '123', department: 'jaja')];
     setState(() {
-      rooms = fetchedRooms;
+   
+    // rooms = fetchedRooms; <= ERROR AQUI
       isLoading = false;
     });
   }

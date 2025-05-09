@@ -27,6 +27,7 @@ Future<Database> initDB() async {
 }
   Future<void> insertUserSQlite(String name, String email, String codigo) async {
     final db = await initDB();
+    
     await db.insert('usuario', {
       'nombre': '${name}}',
       'codigo': '${codigo}',
