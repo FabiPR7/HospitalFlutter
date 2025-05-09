@@ -24,10 +24,10 @@ class _WidgetsRoomState extends State<WidgetsRoom> {
   }
 
   Future<void> fetchRooms() async {
-    HabitacionFirebase habitacionFirebase = HabitacionFirebase();
-    final fetchedRooms = await habitacionFirebase.getRoomsByHospitalCode(
-      widget.hospitalCode,
-    );
+    //HabitacionFirebase habitacionFirebase = HabitacionFirebase();
+    //final fetchedRooms = await habitacionFirebase.getRoomsByHospitalCode(
+    //  widget.hospitalCode,
+    //);
    //Room(id: '', name: 'jaja', stretches: 10, floor: 1, available: 10, code: '123', department: 'jaja')];
     setState(() {
    

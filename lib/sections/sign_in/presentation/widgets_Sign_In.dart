@@ -83,7 +83,7 @@ class WidgetsSignIn {
                        Map<String, dynamic>? datos =  await Userfirebase().getUserByEmail(controllerEmail.value.text);
                        if(datos != null) {
                       DatabaseHelper().initDB();
-                      DatabaseHelper().insertUserSQlite(datos?['name'] as String, datos?['email'] as String, datos?['codigo'] as String);
+                      DatabaseHelper().insertUserSQlite(datos['name'] as String, datos['email'] as String, datos['codigo'] as String);
                       await Future.delayed(Duration(seconds: 2));
                       await GetData().rechargeData();
                       Navigator.push(

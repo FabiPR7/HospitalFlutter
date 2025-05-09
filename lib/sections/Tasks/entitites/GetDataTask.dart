@@ -1,4 +1,3 @@
-import 'package:mi_hospital/domain/Data/DataFuture.dart';
 import 'package:mi_hospital/main.dart';
 
 class GetDataTask {
@@ -15,7 +14,7 @@ class GetDataTask {
   }
 
    String convertCodetoNameStaff(String code){
-    if(code != null){
+    if(code.isNotEmpty){
     for (var staff in staffList) {
         if(code == staff["codigo"]){
           return staff["name"];
