@@ -12,11 +12,13 @@ var patientsList = null;
 var nameHospital = null;
 
 dynamic data() async{
-  userLogin = await DatabaseHelper().getFirstUser();
+  userLogin = await DatabaseHelper().getFirstUser() ;
   hospitalCode = await DatabaseHelper().getHospitalCode();
-  staffList = await StaffFirebase().getUsersWithSamePrefix(hospitalCode);
+  staffList = await StaffFirebase().getUsersWithSamePrefix(hospitalCode) ;
   patientsList = await PatientsFirebase().getPatients(hospitalCode);
   nameHospital = await HospitalFirebase().obtenerNombrePorCodigo(hospitalCode);
   return {"userLogin" : userLogin, "hospitalCode" : hospitalCode, "staffList" : staffList, "patientsList" : patientsList, "hospitalName" : nameHospital};
 }
+
+
 }

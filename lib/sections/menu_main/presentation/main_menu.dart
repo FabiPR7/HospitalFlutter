@@ -5,9 +5,9 @@ import 'package:mi_hospital/main.dart';
 import 'package:mi_hospital/sections/Rooms/presentation/RoomScreen.dart';
 import 'package:mi_hospital/sections/Patients/presentation/PatientsScreen.dart';
 import 'package:mi_hospital/sections/Staff/presentation/StaffScreen.dart';
-import 'package:mi_hospital/sections/menu_main/presentation/widgets_main_menu.dart';
-import 'package:mi_hospital/sections/profile/presentation/profile.dart';
-import 'package:mi_hospital/sections/settings/presentation/setting.dart';
+import 'package:mi_hospital/sections/Menu_main/presentation/widgets_main_menu.dart';
+import 'package:mi_hospital/sections/Profile/presentation/profile.dart';
+import 'package:mi_hospital/sections/Settings/presentation/setting.dart';
 import 'package:mi_hospital/sections/tasks/presentation/tasks.dart';
 
 class MainMenuScreen extends StatefulWidget {

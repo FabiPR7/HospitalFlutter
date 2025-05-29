@@ -1,8 +1,10 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 // 1. Abrir/Crear la base de datos
 class DatabaseHelper {
+  final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
 
 Future<Database> initDB() async {
   final databasePath = await getDatabasesPath();
@@ -23,16 +25,30 @@ Future<Database> initDB() async {
       ''');
     },
   );
-  
 }
+
   Future<void> insertUserSQlite(String name, String email, String codigo) async {
     final db = await initDB();
+    final hospitalCode = codigo.split('-')[0];
+    
+    final snapshot = await _databaseReference
+        .child('hospitals')
+        .orderByChild('code')
+        .equalTo(hospitalCode)
+        .once();
+    
+    String hospitalName = "Hospital Desconocido";
+    if (snapshot.snapshot.value != null) {
+      final hospitals = snapshot.snapshot.value as Map<dynamic, dynamic>;
+      final hospitalData = hospitals.values.first as Map<dynamic, dynamic>;
+      hospitalName = hospitalData['name'] as String? ?? "Hospital Desconocido";
+    }
     
     await db.insert('usuario', {
-      'nombre': '${name}}',
-      'codigo': '${codigo}',
+      'nombre': name,
+      'codigo': codigo,
       'rol': 'Medico',
-      'hospital': 'Hospital General San Juan'
+      'hospital': hospitalName
     });
     await db.close();
   }
@@ -99,12 +115,26 @@ Future<String?> getHospitalCode() async {
     if (parts!.isNotEmpty) {
       return parts.first; 
     }
-    return null;
+    return "";
   } catch (e) {
-    return null; 
+    return ""; 
   }
 }
 
-
+Future<void> logout() async {
+  Database? db;
+  try {
+    db = await initDB();
+    if (db != null) {
+      await db.delete('usuario');
+    }
+  } catch (e) {
+    throw e;
+  } finally {
+    if (db != null) {
+      await db.close();
+    }
+  }
+}
 }
 

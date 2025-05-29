@@ -14,13 +14,14 @@ class GetDataTask {
   }
 
    String convertCodetoNameStaff(String code){
-    if(code.isNotEmpty){
+    if(code.isEmpty || code == "null" || code == null){
+      return "Sin asignar";
+    }
     for (var staff in staffList) {
         if(code == staff["codigo"]){
           return staff["name"];
         }
     }
-    }
-    return "Sin asingar";
+    return "Sin asignar";
   }
 }

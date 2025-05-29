@@ -27,7 +27,7 @@ Room({
     id: id,
     available: data['available'] ?? 0,
     code: data['code'] ?? '',
-    department: data['department'] ?? '', // 👈 Usa la clave correcta
+    department: data['department'] ?? '', 
     floor: data['floor'] ?? 0,
     name: data['name'] ?? '',
     stretches: data['stretches'] ?? 0,

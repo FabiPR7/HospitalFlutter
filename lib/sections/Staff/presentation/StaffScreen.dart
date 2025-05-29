@@ -7,12 +7,9 @@ class StaffScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBarHospital().getAppBar(),
-      body: SingleChildScrollView(
-      child: Column(children: [WidgetsStaff().header(), WidgetsStaff().body()], ),
-      ),
+      body: const WidgetsStaff(),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mi_hospital/appConfig/presentation/AppBar.dart';
-import 'package:mi_hospital/sections/settings/presentation/widgets_settings.dart';
+import 'package:mi_hospital/sections/Settings/presentation/widgets_settings.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -10,7 +10,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarHospital().getAppBar(),
-      body: WidgetsSettings().getBody(),
+      body: WidgetsSettings.getBody(),
     );
   }
 }

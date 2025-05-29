@@ -1,67 +1,121 @@
 import 'package:flutter/material.dart';
+import 'package:mi_hospital/appConfig/domain/sqlite/Sqlite.dart';
+import 'package:mi_hospital/sections/Sign_in/presentation/sign_in.dart';
 
 class WidgetsSettings {
-  Widget getBody() {
-    return ListView(
-      children: [
-        const SizedBox(height: 16),
-        getSeparator('Preferencias'),
-        getSwitchListTile('Notificaciones', true, (bool value) {}),
-        getListTile('Cambiar la fuente', Icons.text_fields, () {}),
-        getListTile('Tema', Icons.brightness_6, () {}),
-        getListTile('Idiomas', Icons.language, () {}),
+  static Future<void> _logout(BuildContext context) async {
+    final confirmacion = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmar Cierre de Sesión'),
+        content: const Text('¿Está seguro que desea cerrar sesión?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF48CAE4),
+            ),
+            child: const Text('Confirmar'),
+          ),
+        ],
+      ),
+    );
 
-        const Divider(),
+    if (confirmacion == true) {
+      try {
+        final dbHelper = DatabaseHelper();
+        await dbHelper.logout();
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => SignInScreen()),
+          (route) => false,
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No se pudo cerrar sesión correctamente. Por favor, intente nuevamente.'),
+            backgroundColor: Colors.red[100],
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
 
-        getSeparator('Soporte'),
-        getListTile(
-          'Política de privacidad',
-          Icons.privacy_tip_outlined,
-          () {},
-        ),
-        getListTile('Ayuda', Icons.help_outline, () {}),
-        getListTile(
-          'Contacto con servicio técnico',
-          Icons.support_agent,
-          () {},
-        ),
+  static Widget getBody() {
+    return Builder(
+      builder: (context) => ListView(
+        children: [
+          const SizedBox(height: 16),
+          getSeparator('Preferencias'),
+          getSwitchListTile('Notificaciones', true, (bool value) {}),
+          getListTile('Cambiar la fuente', Icons.text_fields, () {}),
+          getListTile('Tema', Icons.brightness_6, () {}),
+          getListTile('Idiomas', Icons.language, () {}),
 
-        const Divider(),
+          const Divider(),
 
-        getSeparator('Acerca de'),
-        getListTile(
-          'Versión de la app',
-          Icons.info_outline,
-          () {},
-          subtitle: '1.0.0',
-        ),
+          getSeparator('Soporte'),
+          getListTile(
+            'Política de privacidad',
+            Icons.privacy_tip_outlined,
+            () {},
+          ),
+          getListTile('Ayuda', Icons.help_outline, () {}),
+          getListTile(
+            'Contacto con servicio técnico',
+            Icons.support_agent,
+            () {},
+          ),
 
-        const Divider(),
+          const Divider(),
 
-        getListTile('Cerrar sesión', Icons.logout, () {}, isDestructive: true),
-      ],
+          getSeparator('Acerca de'),
+          getListTile(
+            'Versión de la app',
+            Icons.info_outline,
+            () {},
+            subtitle: '1.0.0',
+          ),
+
+          const Divider(),
+
+          getListTile('Cerrar sesión', Icons.logout, () => _logout(context), isDestructive: true),
+        ],
+      ),
     );
   }
 
-  Widget getListTile(
+  static Widget getListTile(
     String text,
     IconData icon,
     VoidCallback onTap, {
     String? subtitle,
     bool isDestructive = false,
   }) {
-    return ListTile(
-      leading: Icon(icon, color: isDestructive ? Colors.red : null),
-      title: Text(
-        text,
-        style: isDestructive ? const TextStyle(color: Colors.red) : null,
+    return Builder(
+      builder: (context) => ListTile(
+        leading: Icon(icon, color: isDestructive ? Colors.red : null),
+        title: Text(
+          text,
+          style: isDestructive ? const TextStyle(color: Colors.red) : null,
+        ),
+        subtitle: subtitle != null ? Text(subtitle) : null,
+        onTap: () {
+          if (text == 'Cerrar sesión') {
+            _logout(context);
+          } else {
+            onTap();
+          }
+        },
       ),
-      subtitle: subtitle != null ? Text(subtitle) : null,
-      onTap: onTap,
     );
   }
 
-  Widget getSeparator(String text) {
+  static Widget getSeparator(String text) {
     return Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Text(
@@ -71,7 +125,7 @@ class WidgetsSettings {
         );
   }
 
-  Widget getSwitchListTile(String text, bool value, Function(bool) onChanged) {
+  static Widget getSwitchListTile(String text, bool value, Function(bool) onChanged) {
     return SwitchListTile(
       title: Text(text),
       value: value,
