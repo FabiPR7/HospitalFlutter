@@ -7,6 +7,9 @@ import 'package:mi_hospital/sections/Rooms/entities/Room.dart';
 import 'package:mi_hospital/sections/Tasks/entitites/TasksFirebase.dart';
 import 'package:mi_hospital/main.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:mi_hospital/sections/Notifications/entities/Notification.dart';
+import 'package:mi_hospital/sections/Notifications/infrastructure/NotificationFirebase.dart';
+import 'package:mi_hospital/sections/Notifications/presentation/notification_overlay.dart';
 
 class PatientScreen extends StatefulWidget {
   final String nombre;
@@ -79,6 +82,7 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
       try {
         final roomFirebase = RoomFirebase();
         final tasksFirebase = Tasksfirebase();
+        final notificationFirebase = NotificationFirebase();
         final rooms = await roomFirebase.getRoomsByHospitalCode(GetData().getHospitalCode());
         
         // Encontrar la habitación actual
@@ -108,6 +112,28 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
           habitacionActual.name,
           habitacionActual.available + 1
         );
+
+        // Notificar a todos los usuarios activos del hospital
+        final staffList = GetData().getStaffList();
+        final activeStaff = staffList.where((staff) => 
+          staff['state'] == true && 
+          staff['hospitalCode'] == GetData().getHospitalCode()
+        ).toList();
+
+        for (var staff in activeStaff) {
+          if (staff['codigo'] != GetData().getUserLogin()["codigo"]) {
+            final notification = AppNotification(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              title: 'Paciente dado de alta',
+              message: '${GetData().getUserLogin()["nombre"]} ha dado de alta al paciente ${widget.nombre} de la habitación ${widget.habitacion}',
+              type: 'patient_discharge',
+              senderCode: GetData().getUserLogin()["codigo"],
+              receiverCode: staff['codigo'],
+              timestamp: DateTime.now(),
+            );
+            await notificationFirebase.createNotification(notification);
+          }
+        }
 
         // Obtener y actualizar todas las tareas pendientes del paciente
         final tasks = await tasksFirebase.getTasks(widget.dni, filterByPatient: true);
@@ -145,6 +171,7 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
 
   Future<void> _mostrarDialogoMover() async {
     final roomFirebase = RoomFirebase();
+    final notificationFirebase = NotificationFirebase();
     final rooms = await roomFirebase.getRoomsByHospitalCode(GetData().getHospitalCode());
     final List<Map<String, dynamic>> habitaciones = [];
     
@@ -224,77 +251,57 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
                     itemBuilder: (context, index) {
                       final habitacion = habitaciones[index];
                       final disponible = habitacion['available'];
-                      final porcentajeOcupacion = ((habitacion['capacity'] - disponible) / habitacion['capacity']) * 100;
-                      
                       return Card(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        elevation: 2,
+                        margin: const EdgeInsets.symmetric(vertical: 8),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: InkWell(
                           onTap: () {
                             habitacionSeleccionada = {
-                              'id': habitacion['id']!,
-                              'name': habitacion['name']!,
+                              'id': habitacion['id'],
+                              'name': habitacion['name'],
                             };
-                            Navigator.of(dialogContext).pop();
+                            Navigator.pop(context);
                           },
                           borderRadius: BorderRadius.circular(12),
                           child: Padding(
                             padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue[50],
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Icon(
-                                        Icons.door_front_door,
-                                        color: Colors.blue[700],
-                                        size: 24,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            habitacion['name'],
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            'Disponibles: $disponible de ${habitacion['capacity']} camillas',
-                                            style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue[50],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    Icons.door_front_door,
+                                    color: Colors.blue[700],
+                                    size: 24,
+                                  ),
                                 ),
-                                const SizedBox(height: 12),
-                                LinearProgressIndicator(
-                                  value: porcentajeOcupacion / 100,
-                                  backgroundColor: Colors.grey[200],
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    porcentajeOcupacion > 80
-                                        ? Colors.red
-                                        : porcentajeOcupacion > 50
-                                            ? Colors.orange
-                                            : Colors.green,
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        habitacion['name'],
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Disponibles: $disponible de ${habitacion['capacity']} camillas',
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -308,18 +315,6 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
             ],
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text(
-              'Cancelar',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
       ),
     );
 
@@ -339,6 +334,38 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
             widget.habitacion,
             id
           );
+
+          // Notificar a todos los usuarios activos excepto al que realizó el cambio
+          final staffList = GetData().getStaffList();
+          final activeStaff = staffList.where((staff) => 
+            staff['state'] == true && 
+            staff['hospitalCode'] == GetData().getHospitalCode()
+          ).toList();
+
+          for (var staff in activeStaff) {
+            if (staff['codigo'] != GetData().getUserLogin()["codigo"]) {
+              final notification = AppNotification(
+                id: DateTime.now().millisecondsSinceEpoch.toString() + '_${staff['codigo']}',
+                title: 'Cambio de habitación',
+                message: '${GetData().getUserLogin()["nombre"]} ha movido al paciente ${widget.nombre} de la habitación ${widget.habitacion} a ${name}',
+                type: 'room_change',
+                senderCode: GetData().getUserLogin()["codigo"],
+                receiverCode: staff['codigo'],
+                timestamp: DateTime.now(),
+              );
+              await notificationFirebase.createNotification(notification);
+            }
+          }
+
+          // Mostrar notificación flotante al usuario que realizó el cambio
+          if (mounted) {
+            NotificationOverlay().show(
+              context: context,
+              title: 'Paciente movido',
+              message: 'Has movido a ${widget.nombre} a la habitación $name',
+              type: 'room_change',
+            );
+          }
 
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(

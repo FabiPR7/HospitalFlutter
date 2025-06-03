@@ -54,6 +54,26 @@ class ThemeHospital {
     return const Color(0xFFFFFFFF);
   }
 
+  static Color getGrey() {
+    return const Color(0xFF9E9E9E);
+  }
+
+  static Color getLightGrey() {
+    return const Color(0xFFE0E0E0);
+  }
+
+  static Color getDarkGrey() {
+    return const Color(0xFF424242);
+  }
+
+  static Color getSuccessGreen() {
+    return const Color(0xFF4CAF50);
+  }
+
+  static Color getWarningYellow() {
+    return const Color(0xFFFFC107);
+  }
+
   static Color getTaskCardColor(int priority) {
     switch (priority) {
       case 0:

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
 import 'package:mi_hospital/domain/Data/DataFuture.dart';
 import 'package:mi_hospital/firebase_options.dart';
 import 'package:mi_hospital/sections/Menu_main/presentation/main_menu.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Mi Hospital',
       debugShowCheckedModeBanner: false,
       theme: ThemeHospital(color: 5).themeData(),

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mi_hospital/main.dart';
 import 'package:mi_hospital/sections/Staff/entities/StaffFirebase.dart';
+import 'package:get/get.dart';
+import 'package:mi_hospital/sections/Message/presentation/message_screen.dart';
+import 'package:mi_hospital/sections/Message/entities/MessageFirebase.dart';
+import 'dart:async';
+import 'package:mi_hospital/appConfig/presentation/theme/Theme.dart';
 
 class WidgetsStaff extends StatefulWidget {
   const WidgetsStaff({Key? key}) : super(key: key);
@@ -12,10 +17,14 @@ class WidgetsStaff extends StatefulWidget {
 class _WidgetsStaffState extends State<WidgetsStaff> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+  final MessageFirebase _messageFirebase = MessageFirebase();
+  Map<String, StreamSubscription> _unreadSubscriptions = {};
 
   @override
   void dispose() {
     _searchController.dispose();
+    // Cancelar todas las suscripciones
+    _unreadSubscriptions.values.forEach((subscription) => subscription.cancel());
     super.dispose();
   }
 
@@ -97,87 +106,159 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
   }
 
   Widget estadoCard(String nombre, bool estado, String codigo) {
-    return Container(
-      height: 65,
-      margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+    return StreamBuilder<int>(
+      stream: _messageFirebase.getUnreadMessagesCount(
+        GetData().getUserLogin()['codigo'],
+        codigo,
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 4,
-            decoration: BoxDecoration(
-              color: estado ? Colors.green : Colors.red,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                bottomLeft: Radius.circular(12),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          nombre,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          codigo,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey[600],
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ],
-                    ),
+      builder: (context, snapshot) {
+        final unreadCount = snapshot.data ?? 0;
+        
+        return GestureDetector(
+          onTap: estado ? () {
+            Get.to(() => MessageScreen(
+              userId: codigo,
+              userName: nombre,
+              personalCode: codigo,
+              senderCode: GetData().getUserLogin()['codigo'],
+            ));
+          } : null,
+          child: Container(
+            height: 65,
+            margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: estado ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      estado ? 'En turno' : 'Fuera de turno',
-                      style: TextStyle(
-                        color: estado ? Colors.green : Colors.red,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
+                ],
+              ),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 4,
+                        decoration: BoxDecoration(
+                          color: estado ? Colors.green : Colors.red,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(12),
+                            bottomLeft: Radius.circular(12),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      nombre,
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      codigo,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey[600],
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: estado ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  estado ? 'En turno' : 'Fuera de turno',
+                                  style: TextStyle(
+                                    color: estado ? Colors.green : Colors.red,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (unreadCount > 0)
+                    Positioned(
+                      top: -8,
+                      right: -8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              ThemeHospital.getButtonBlue(),
+                              ThemeHospital.getLightBlue(),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: ThemeHospital.getButtonBlue().withOpacity(0.3),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.message,
+                              color: Colors.white,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              unreadCount.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -218,7 +299,7 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
               ...enTurno.map((user) => estadoCard(
                     user['name'] ?? 'Sin nombre',
                     true,
-                    user['code'] ?? 'Sin código',
+                    user['codigo'] ?? 'Sin código',
                   )),
             ],
             if (fueraDeTurno.isNotEmpty) ...[

@@ -22,7 +22,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
   final _telefonoController = TextEditingController();
   final _descripcionController = TextEditingController();
   final _tareaController = TextEditingController();
-  String? _selectedRoom;
+  String? _selectedRoomId;
   List<Room> _rooms = [];
   bool _isLoading = true;
   bool _isSaving = false;
@@ -130,7 +130,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
         // Verificar disponibilidad de la habitación
         final roomFirebase = RoomFirebase();
         final rooms = await roomFirebase.getRoomsByHospitalCode(GetData().getHospitalCode());
-        final selectedRoom = rooms.firstWhere((room) => room.name == _selectedRoom);
+        final selectedRoom = rooms.firstWhere((room) => room.id == _selectedRoomId);
         
         if (selectedRoom.available <= 0) {
           if (mounted) {
@@ -157,7 +157,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
           'address': _direccionController.text,
           'phone': _telefonoController.text,
           'description': _descripcionController.text,
-          'roomName': _selectedRoom,
+          'roomName': selectedRoom.name,
           'admissionDate': formattedDate,
           'task': [],
           'img': 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png',
@@ -170,7 +170,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
           selectedRoom.available - 1,
         );
 
-        await pacienteFirebase.addPatient(paciente);
+        await pacienteFirebase.addPatient(paciente, context: context);
 
         // Guardar todas las tareas
         for (var tarea in _tareas) {
@@ -328,7 +328,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
 
   Widget _buildRoomDropdown() {
     return DropdownButtonFormField<String>(
-      value: _selectedRoom,
+      value: _selectedRoomId,
       decoration: InputDecoration(
         labelText: 'Habitación',
         hintText: 'Seleccione una habitación',
@@ -360,13 +360,13 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       ),
       items: _rooms.where((room) => room.available > 0).map((room) {
         return DropdownMenuItem<String>(
-          value: room.name,
+          value: room.id,
           child: Text('${room.name} - Piso ${room.floor} (${room.available} camillas disponibles)'),
         );
       }).toList(),
       onChanged: (value) {
         setState(() {
-          _selectedRoom = value;
+          _selectedRoomId = value;
         });
       },
       validator: (value) {

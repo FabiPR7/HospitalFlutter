@@ -35,6 +35,18 @@ class RoomFirebase {
   }) async {
     final databaseRef = FirebaseDatabase.instance.ref('rooms');
     try {
+      // Verificar si ya existe una habitación con el mismo nombre en el mismo hospital
+      final snapshot = await databaseRef.get();
+      if (snapshot.exists) {
+        final roomsData = snapshot.value as Map<dynamic, dynamic>;
+        for (var entry in roomsData.entries) {
+          final roomData = entry.value as Map<dynamic, dynamic>;
+          if (roomData['code'] == code && roomData['name'] == name) {
+            throw Exception('Ya existe una habitación con el nombre "$name" en este hospital.');
+          }
+        }
+      }
+
       final newRoomRef = databaseRef.push();
       await newRoomRef.set({
         'name': name,
@@ -49,11 +61,12 @@ class RoomFirebase {
     }
   }
 
-  Future<void> deleteRoom(String roomId) async {
+   Future<void> deleteRoom(String roomId) async {
     final databaseRef = FirebaseDatabase.instance.ref('rooms');
     try {
       await databaseRef.child(roomId).remove();
     } catch (e) {
+      print('Error deleting room: $e');
       throw e;
     }
   }
@@ -89,15 +102,34 @@ class RoomFirebase {
     }
   }
 
-  Future<void> updateRoomsOccupancy(String currentRoomId, String newRoomId) async {
+  Future<void> updateRoomsOccupancy(String currentRoomName, String newRoomId) async {
     try {
-      await _dbRef.child('rooms').child(currentRoomId).update({
-        'available': ServerValue.increment(1),
-      });
+      // Obtener todas las habitaciones
+      final snapshot = await _dbRef.child('rooms').get();
+      if (snapshot.exists) {
+        final roomsData = snapshot.value as Map<dynamic, dynamic>;
+        
+        // Encontrar la habitación actual por nombre
+        String? currentRoomId;
+        for (var entry in roomsData.entries) {
+          final roomData = entry.value as Map<dynamic, dynamic>;
+          if (roomData['name'] == currentRoomName) {
+            currentRoomId = entry.key;
+            break;
+          }
+        }
 
-      await _dbRef.child('rooms').child(newRoomId).update({
-        'available': ServerValue.increment(-1),
-      });
+        if (currentRoomId != null) {
+          // Actualizar la disponibilidad de ambas habitaciones
+          await _dbRef.child('rooms').child(currentRoomId).update({
+            'available': ServerValue.increment(1),
+          });
+        }
+
+        await _dbRef.child('rooms').child(newRoomId).update({
+          'available': ServerValue.increment(-1),
+        });
+      }
     } catch (e) {
       throw e;
     }

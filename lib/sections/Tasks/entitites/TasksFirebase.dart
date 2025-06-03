@@ -1,9 +1,15 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:mi_hospital/sections/Tasks/entitites/Task.dart';
 import 'package:mi_hospital/main.dart';
+import 'package:mi_hospital/sections/Notifications/entities/Notification.dart';
+import 'package:mi_hospital/sections/Notifications/infrastructure/NotificationFirebase.dart';
+import 'package:mi_hospital/sections/Notifications/presentation/notification_overlay.dart';
+import 'package:flutter/material.dart';
+import 'package:mi_hospital/sections/Tasks/entitites/GetDataTask.dart';
 
 class Tasksfirebase {
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
+  final NotificationFirebase _notificationFirebase = NotificationFirebase();
 
   Future<List<Task>> getTasks(String codePrefix, {bool filterByPatient = false}) async {
     final databaseRef = FirebaseDatabase.instance.ref().child('tasks');
@@ -51,6 +57,7 @@ class Tasksfirebase {
     required String patientDni,
     String? assignedTo,
     required String createdBy,
+    BuildContext? context,
   }) async {
     try {
       final newTaskRef = _dbRef.child('tasks').push();
@@ -65,6 +72,74 @@ class Tasksfirebase {
 
       if (assignedTo != null) {
         taskData['assignedTo'] = assignedTo;
+        
+        // Crear notificación para el usuario asignado
+        final staffList = GetData().getStaffList() as List;
+        final assignedStaff = staffList.firstWhere(
+          (staff) => staff['codigo'] == assignedTo,
+          orElse: () => {'nombre': 'Personal'},
+        );
+
+        final notification = AppNotification(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: 'Nueva tarea asignada',
+          message: '${GetData().getUserLogin()["nombre"]} te ha asignado una tarea para el paciente ${GetDataTask().convertDnitoNamePatient(patientDni)}: ${description.length > 50 ? description.substring(0, 50) + "..." : description}',
+          type: 'task',
+          senderCode: createdBy,
+          receiverCode: assignedTo,
+          timestamp: DateTime.now(),
+        );
+
+        await _notificationFirebase.createNotification(notification);
+
+        // Mostrar notificación flotante si hay contexto
+        if (context != null) {
+          NotificationOverlay().show(
+            context: context,
+            title: 'Nueva tarea asignada',
+            message: '${GetData().getUserLogin()["nombre"]} te ha asignado una tarea para el paciente ${GetDataTask().convertDnitoNamePatient(patientDni)}: ${description.length > 50 ? description.substring(0, 50) + "..." : description}',
+            type: 'task',
+            onTap: () {
+              // TODO: Navegar a la vista de tareas
+            },
+          );
+        }
+      } else {
+        // Si la tarea no está asignada, notificar a todos los usuarios activos
+        final staffList = GetData().getStaffList() as List;
+        final activeStaff = staffList.where((staff) => staff['state'] == true).toList();
+        
+        for (var staff in activeStaff) {
+          final staffCode = staff['codigo'] as String;
+          
+          // No notificar al creador de la tarea
+          if (staffCode != createdBy) {
+            final notification = AppNotification(
+              id: DateTime.now().millisecondsSinceEpoch.toString() + '_$staffCode',
+              title: 'Nueva tarea disponible',
+              message: 'Hay una nueva tarea sin asignar: ${description.length > 50 ? description.substring(0, 50) + "..." : description}',
+              type: 'task_unassigned',
+              senderCode: createdBy,
+              receiverCode: staffCode,
+              timestamp: DateTime.now(),
+            );
+
+            await _notificationFirebase.createNotification(notification);
+          }
+        }
+
+        // Mostrar notificación flotante al creador si hay contexto
+        if (context != null) {
+          NotificationOverlay().show(
+            context: context,
+            title: 'Tarea creada',
+            message: 'Has creado una nueva tarea sin asignar',
+            type: 'task_unassigned',
+            onTap: () {
+              // TODO: Navegar a la vista de tareas
+            },
+          );
+        }
       }
 
       await newTaskRef.set(taskData);
@@ -73,12 +148,43 @@ class Tasksfirebase {
     }
   }
 
-  Future<void> assignTaskToMe(String taskId) async {
+  Future<void> assignTaskToMe(String taskId, {BuildContext? context}) async {
     try {
       final userCode = GetData().getUserLogin()['codigo'];
       await _dbRef.child('tasks').child(taskId).update({
         'assignedTo': userCode
       });
+
+      final taskSnapshot = await _dbRef.child('tasks').child(taskId).get();
+      if (taskSnapshot.exists) {
+        final taskData = Map<String, dynamic>.from(taskSnapshot.value as Map);
+        final createdBy = taskData['createdBy'] as String;
+        
+        final notification = AppNotification(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: 'Tarea auto-asignada',
+          message: '${GetData().getUserLogin()["nombre"]} se ha auto-asignado una tarea',
+          type: 'task',
+          senderCode: userCode,
+          receiverCode: createdBy,
+          timestamp: DateTime.now(),
+        );
+
+        await _notificationFirebase.createNotification(notification);
+
+        // Mostrar notificación flotante si hay contexto
+        if (context != null) {
+          NotificationOverlay().show(
+            context: context,
+            title: 'Tarea auto-asignada',
+            message: 'Te has auto-asignado una tarea',
+            type: 'task',
+            onTap: () {
+              // TODO: Navegar a la vista de tareas
+            },
+          );
+        }
+      }
     } catch (e) {
       throw e;
     }

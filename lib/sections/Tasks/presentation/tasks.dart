@@ -239,20 +239,40 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
                     patientDni: selectedPatient!,
                     assignedTo: selectedStaff,
                     createdBy: GetData().getUserLogin()["codigo"],
+                    context: context,
                   );
 
                   if (context.mounted) {
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Tarea creada exitosamente'),
-                        backgroundColor: ThemeHospital.getButtonBlue(),
-                      ),
-                    );
-                    if (mounted) {
-                      setState(() {
-                        GetData().rechargeData();
-                      });
+                    if (selectedStaff != null) {
+                      // Obtener el nombre del personal asignado
+                      final staffList = GetData().getStaffList() as List;
+                      final assignedStaff = staffList.firstWhere(
+                        (staff) => staff['codigo'] == selectedStaff,
+                        orElse: () => {'name': 'Personal'},
+                      );
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Tarea asignada a ${assignedStaff['name']}'),
+                          backgroundColor: ThemeHospital.getButtonBlue(),
+                          duration: const Duration(seconds: 3),
+                          action: SnackBarAction(
+                            label: 'Ver',
+                            textColor: Colors.white,
+                            onPressed: () {
+                              // TODO: Navegar a la vista de tareas
+                            },
+                          ),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('Tarea creada exitosamente'),
+                          backgroundColor: ThemeHospital.getButtonBlue(),
+                        ),
+                      );
                     }
                   }
                 } catch (e) {
@@ -284,6 +304,37 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
         ),
       ),
     );
+  }
+
+  Future<void> _assignTaskToMe(String taskId, BuildContext context) async {
+    try {
+      await Tasksfirebase().assignTaskToMe(taskId, context: context);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Tarea auto-asignada exitosamente'),
+            backgroundColor: ThemeHospital.getButtonBlue(),
+            duration: const Duration(seconds: 3),
+            action: SnackBarAction(
+              label: 'Ver',
+              textColor: Colors.white,
+              onPressed: () {
+                // TODO: Navegar a la vista de tareas
+              },
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al auto-asignar la tarea: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override

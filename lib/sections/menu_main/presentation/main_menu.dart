@@ -9,6 +9,10 @@ import 'package:mi_hospital/sections/Menu_main/presentation/widgets_main_menu.da
 import 'package:mi_hospital/sections/Profile/presentation/profile.dart';
 import 'package:mi_hospital/sections/Settings/presentation/setting.dart';
 import 'package:mi_hospital/sections/tasks/presentation/tasks.dart';
+import 'package:mi_hospital/sections/Menu_main/presentation/drawer_menu.dart';
+import 'package:mi_hospital/appConfig/presentation/AppBar.dart';
+import 'package:mi_hospital/appConfig/presentation/theme/Theme.dart';
+import 'package:mi_hospital/domain/Data/DataFuture.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
@@ -21,6 +25,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   String userName = '';
   String code = "";
   bool isSwitchOn = true;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -33,122 +39,238 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     setState(() {
       nombre = nombre?.replaceAll("}", "");
       userName = nombre ?? 'Invitado';
-      code = codigo!;
+      code = codigo ?? '';
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WidgetsMainMenu().appBarMenu(),
-      body: Center(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    userName.isEmpty ? 'Cargando...' : userName,
-                    style: const TextStyle(fontFamily: "arial", fontSize: 20),
-                  ),
+      key: _scaffoldKey,
+      appBar: WidgetsMainMenu().appBarMenu(_scaffoldKey),
+      drawer: DrawerMenu(
+        userName: userName,
+        code: code,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              ThemeHospital.getBackgroundBlue().withOpacity(0.1),
+              ThemeHospital.getWhite(),
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: ThemeHospital.getWhite(),
+                  boxShadow: [
+                    BoxShadow(
+                      color: ThemeHospital.getGrey().withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Switch(
-                    value: isSwitchOn,
-                    onChanged: (value) {
-                      setState(() {
-                        isSwitchOn = value;
-                      });
-                      Userfirebase().updateUserStateByCode(code, value);
-                    },
-                    activeColor: const Color.fromARGB(255, 20, 84, 223),
-                  ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: ThemeHospital.getButtonBlue().withOpacity(0.1),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: ThemeHospital.getButtonBlue().withOpacity(0.3),
+                          width: 2,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          userName.isNotEmpty ? userName[0].toUpperCase() : '?',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: ThemeHospital.getButtonBlue(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userName.isEmpty ? 'Cargando...' : userName,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: ThemeHospital.getDarkGrey(),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: ThemeHospital.getButtonBlue().withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              'Código: $code',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: ThemeHospital.getButtonBlue(),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Switch(
+                      value: isSwitchOn,
+                      onChanged: (value) {
+                        setState(() {
+                          isSwitchOn = value;
+                        });
+                        Userfirebase().updateUserStateByCode(code, value);
+                      },
+                      activeColor: ThemeHospital.getButtonBlue(),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            Padding(      
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Row(
-                children: [
-                  WidgetsMainMenu().imageButtonBySrc(
-                    "assets/images/buttons/habitaciones.png",
-                    130, isSwitchOn,() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RoomScreen(),
-                        ),
-                      );
-                    }
-                  ),
-                  WidgetsMainMenu().imageButtonBySrc(
-                    "assets/images/buttons/pacientes.png",
-                    135,isSwitchOn,() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PacientesScreen(),
-                        ),
-                      );
-                    }
-                  ),
-                  WidgetsMainMenu().imageButtonBySrc(
-                    "assets/images/buttons/personal.png",
-                    130,isSwitchOn, () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StaffScreen(),
-                        ),
-                      );
-                    }
-                  ),
-                ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  WidgetsMainMenu().imageButtonBySrc(
-                    "assets/images/buttons/ajustes.png",
-                    130,isSwitchOn,() {
-                      Navigator.push(
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  children: [
+                    _buildMenuCard(
+                      'Pacientes',
+                      Icons.people,
+                      ThemeHospital.getButtonBlue(),
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const PacientesScreen()),
+                      ),
+                    ),
+                    _buildMenuCard(
+                      'Habitaciones',
+                      Icons.bed,
+                      ThemeHospital.getLightBlue(),
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const RoomScreen()),
+                      ),
+                    ),
+                    _buildMenuCard(
+                      'Personal',
+                      Icons.medical_services,
+                      ThemeHospital.getButtonBlue(),
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const StaffScreen()),
+                      ),
+                    ),
+                    _buildMenuCard(
+                      'Tareas',
+                      Icons.task,
+                      ThemeHospital.getLightBlue(),
+                      () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SettingsScreen(),
+                          builder: (context) => TasksScreen(
+                            codePrefix: GetData().getHospitalCode(),
+                          ),
                         ),
-                      );
-                    }
-                  ),
-                  WidgetsMainMenu().imageButtonBySrc(
-                    "assets/images/buttons/perfil.png",
-                    132,isSwitchOn,() {
-                      Navigator.push(
+                      ),
+                    ),
+                    _buildMenuCard(
+                      'Perfil',
+                      Icons.person,
+                      ThemeHospital.getButtonBlue(),
+                      () => Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfilePage(),
-                        ),
-                      );
-                    }
-                  ),
-                  WidgetsMainMenu().imageButtonBySrc(
-                    "assets/images/buttons/tareas.png",
-                    132,isSwitchOn, () {
-                      Navigator.push(
+                        MaterialPageRoute(builder: (context) => ProfilePage()),
+                      ),
+                    ),
+                    _buildMenuCard(
+                      'Ajustes',
+                      Icons.settings,
+                      ThemeHospital.getLightBlue(),
+                      () => Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => TasksScreen(codePrefix: GetData().getHospitalCode(),),
-                        ),
-                      );
-                    }
-                  ),
-                ],
+                        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuCard(String title, IconData icon, Color color, VoidCallback onTap) {
+    return InkWell(
+      onTap: isSwitchOn ? onTap : null,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        decoration: BoxDecoration(
+          color: ThemeHospital.getWhite(),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
             ),
           ],
+        ),
+        child: Opacity(
+          opacity: isSwitchOn ? 1.0 : 0.5,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  size: 32,
+                  color: color,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

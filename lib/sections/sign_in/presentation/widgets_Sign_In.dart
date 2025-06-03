@@ -5,18 +5,90 @@ import 'package:mi_hospital/main.dart';
 import 'package:mi_hospital/sections/log_in/presentation/log_in.dart';
 import 'package:mi_hospital/sections/Menu_main/presentation/main_menu.dart';
 import 'package:mi_hospital/sections/log_in/presentation/widgets_Log_In.dart';
+import 'package:mi_hospital/appConfig/presentation/theme/Theme.dart';
 
 class WidgetsSignIn {
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
 
   Widget iniciarSesionTextLogIn() {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(vertical: 40),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            ThemeHospital.getButtonBlue(),
+            ThemeHospital.getLightBlue(),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
       child: Center(
-        child: const Text(
-          "Iniciar Sesión",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.3),
+                  width: 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white.withOpacity(0.2),
+                    blurRadius: 20,
+                    spreadRadius: 5,
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.medical_services,
+                size: 40,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              "Iniciar Sesión",
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    offset: Offset(1, 1),
+                    blurRadius: 3,
+                    color: Colors.black26,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Bienvenido de nuevo",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white.withOpacity(0.8),
+                shadows: [
+                  Shadow(
+                    offset: const Offset(1, 1),
+                    blurRadius: 3,
+                    color: Colors.black26,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -25,20 +97,37 @@ class WidgetsSignIn {
   Container formTextLogIn(String text, controller) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
         color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: TextFormField(
         controller: controller,
         obscureText: text == "Contraseña",
         decoration: InputDecoration(
-          border: OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
           labelText: text,
-          errorStyle: TextStyle(color: Colors.red),
+          labelStyle: TextStyle(
+            color: ThemeHospital.getButtonBlue().withOpacity(0.7),
+            fontSize: 16,
+          ),
+          errorStyle: const TextStyle(color: Colors.red),
           prefixIcon: Icon(
             text == "Correo" ? Icons.email : Icons.lock,
-            color: Color(0xFF48CAE4),
+            color: ThemeHospital.getButtonBlue(),
           ),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -61,92 +150,100 @@ class WidgetsSignIn {
   Padding containerLogin(context) {
     final _formKey = GlobalKey<FormState>();
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: const Color.fromARGB(255, 193, 223, 244),
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              ThemeHospital.getBackgroundBlue().withOpacity(0.1),
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Form(
             key: _formKey,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                WidgetsSignIn().formTextLogIn("Correo", controllerEmail),
-                SizedBox(height: 20),
-                WidgetsSignIn().formTextLogIn("Contraseña", controllerPassword),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LogInScreen()),
-                        );
-                      },
-                      child: Text(
-                        "Regístrate",
-                        style: TextStyle(
-                          color: Color(0xFF48CAE4),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "¿Olvidaste tu contraseña?",
-                        style: TextStyle(
-                          color: Color(0xFF48CAE4),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
+                const SizedBox(height: 10),
+                formTextLogIn("Correo", controllerEmail),
+                const SizedBox(height: 16),
+                formTextLogIn("Contraseña", controllerPassword),
+                const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () async { 
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      if (await Userfirebase().loginUser(
-                        controllerEmail.value.text,
-                        controllerPassword.value.text,
+                      bool result = await Userfirebase().loginUser(
+                        controllerEmail.text,
+                        controllerPassword.text,
                         context,
-                      )) {
-                        Map<String, dynamic>? datos = await Userfirebase().getUserByEmail(controllerEmail.value.text);
-                        if(datos != null) {
-                          DatabaseHelper().initDB();
-                          DatabaseHelper().insertUserSQlite(
-                            datos['name'] as String, 
-                            datos['email'] as String, 
-                            datos['codigo'] as String
+                      );
+                      if (result) {
+                        Map<String, dynamic>? datos = await Userfirebase().getUserByEmail(controllerEmail.text);
+                        if (datos != null) {
+                          await DatabaseHelper().initDB();
+                          await DatabaseHelper().insertUserSQlite(
+                            datos['name'] ?? '',
+                            datos['email'] ?? '',
+                            datos['codigo'] ?? ''
                           );
-                          await Future.delayed(Duration(seconds: 2));
+                          await Future.delayed(const Duration(seconds: 2));
                           await GetData().rechargeData();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MainMenuScreen(),
-                            ),
-                          );
+                          if (context.mounted) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const MainMenuScreen(),
+                              ),
+                            );
+                          }
                         }
                       }
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF48CAE4),
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    backgroundColor: ThemeHospital.getButtonBlue(),
+                    minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     "Iniciar Sesión",
                     style: TextStyle(
                       fontSize: 16,
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LogInScreen(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "¿No tienes una cuenta? Regístrate",
+                    style: TextStyle(
+                      color: ThemeHospital.getButtonBlue(),
+                      fontSize: 14,
                     ),
                   ),
                 ),
