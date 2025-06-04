@@ -58,8 +58,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              ThemeHospital.getBackgroundBlue().withOpacity(0.1),
-              ThemeHospital.getWhite(),
+              ThemeController.to.getBackgroundBlue().withOpacity(0.1),
+              ThemeController.to.getWhite(),
             ],
           ),
         ),
@@ -69,10 +69,10 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: ThemeHospital.getWhite(),
+                  color: ThemeController.to.getWhite(),
                   boxShadow: [
                     BoxShadow(
-                      color: ThemeHospital.getGrey().withOpacity(0.1),
+                      color: ThemeController.to.getGrey().withOpacity(0.1),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     ),
@@ -84,10 +84,10 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: ThemeHospital.getButtonBlue().withOpacity(0.1),
+                        color: ThemeController.to.getButtonBlue().withOpacity(0.1),
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: ThemeHospital.getButtonBlue().withOpacity(0.3),
+                          color: ThemeController.to.getButtonBlue().withOpacity(0.3),
                           width: 2,
                         ),
                       ),
@@ -97,7 +97,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: ThemeHospital.getButtonBlue(),
+                            color: ThemeController.to.getButtonBlue(),
                           ),
                         ),
                       ),
@@ -112,7 +112,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: ThemeHospital.getDarkGrey(),
+                              color: ThemeController.to.getDarkGrey(),
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -122,14 +122,14 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: ThemeHospital.getButtonBlue().withOpacity(0.1),
+                              color: ThemeController.to.getButtonBlue().withOpacity(0.1),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               'Código: $code',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: ThemeHospital.getButtonBlue(),
+                                color: ThemeController.to.getButtonBlue(),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -145,7 +145,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                         });
                         Userfirebase().updateUserStateByCode(code, value);
                       },
-                      activeColor: ThemeHospital.getButtonBlue(),
+                      activeColor: ThemeController.to.getButtonBlue(),
                     ),
                   ],
                 ),
@@ -162,7 +162,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                     _buildMenuCard(
                       'Pacientes',
                       Icons.people,
-                      ThemeHospital.getButtonBlue(),
+                      ThemeController.to.getButtonBlue(),
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const PacientesScreen()),
@@ -171,7 +171,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                     _buildMenuCard(
                       'Habitaciones',
                       Icons.bed,
-                      ThemeHospital.getLightBlue(),
+                      ThemeController.to.getLightBlue(),
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const RoomScreen()),
@@ -180,7 +180,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                     _buildMenuCard(
                       'Personal',
                       Icons.medical_services,
-                      ThemeHospital.getButtonBlue(),
+                      ThemeController.to.getButtonBlue(),
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const StaffScreen()),
@@ -189,7 +189,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                     _buildMenuCard(
                       'Tareas',
                       Icons.task,
-                      ThemeHospital.getLightBlue(),
+                      ThemeController.to.getLightBlue(),
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -202,7 +202,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                     _buildMenuCard(
                       'Perfil',
                       Icons.person,
-                      ThemeHospital.getButtonBlue(),
+                      ThemeController.to.getButtonBlue(),
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => ProfilePage()),
@@ -211,7 +211,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                     _buildMenuCard(
                       'Ajustes',
                       Icons.settings,
-                      ThemeHospital.getLightBlue(),
+                      ThemeController.to.getLightBlue(),
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const SettingsScreen()),
@@ -233,13 +233,13 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
       borderRadius: BorderRadius.circular(20),
       child: Container(
         decoration: BoxDecoration(
-          color: ThemeHospital.getWhite(),
+          color: ThemeController.to.getWhite(),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
               color: color.withOpacity(0.1),
               blurRadius: 10,
-              offset: const Offset(0, 5),
+              offset: const Offset(0, 9),
             ),
           ],
         ),

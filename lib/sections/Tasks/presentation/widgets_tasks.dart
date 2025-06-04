@@ -82,7 +82,7 @@ class _WidgetsTaskState extends State<WidgetsTask> {
                   ScaffoldMessenger.of(dialogContext).showSnackBar(
                     SnackBar(
                       content: const Text('Tarea asignada exitosamente'),
-                      backgroundColor: ThemeHospital.getButtonBlue(),
+                      backgroundColor: ThemeController.to.getButtonBlue(),
                     ),
                   );
                 } catch (e) {
@@ -96,7 +96,7 @@ class _WidgetsTaskState extends State<WidgetsTask> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: ThemeHospital.getButtonBlue(),
+                backgroundColor: ThemeController.to.getButtonBlue(),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -133,7 +133,7 @@ class _WidgetsTaskState extends State<WidgetsTask> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.task_alt, color: ThemeHospital.getButtonBlue()),
+                  Icon(Icons.task_alt, color: ThemeController.to.getButtonBlue()),
                   const SizedBox(width: 10),
                   const Text(
                     'Detalles de la Tarea',
@@ -297,11 +297,11 @@ class _WidgetsTaskState extends State<WidgetsTask> {
         Duration difference = DateTime.now().difference(task.timestamp);
         Color backgroundColor;
         if (difference.inHours >= 2) {
-          backgroundColor = ThemeHospital.getTaskCardColor(2);
+          backgroundColor = ThemeController.to.getTaskCardColor(2);
         } else if (difference.inHours >= 1) {
-          backgroundColor = ThemeHospital.getTaskCardColor(1);
+          backgroundColor = ThemeController.to.getTaskCardColor(1);
         } else {
-          backgroundColor = ThemeHospital.getTaskCardColor(0);
+          backgroundColor = ThemeController.to.getTaskCardColor(0);
         }
         return Card(
           color: backgroundColor,
@@ -329,7 +329,7 @@ class _WidgetsTaskState extends State<WidgetsTask> {
                     ElevatedButton( 
                       onPressed: () => _showConfirmationDialog(context, task),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: ThemeHospital.getButtonBlue(),
+                        backgroundColor: ThemeController.to.getButtonBlue(),
                       ),
                       child: const Text('Asignarme', style: TextStyle(color: Colors.white),),
                     ),

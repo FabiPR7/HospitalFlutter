@@ -85,7 +85,6 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
         final notificationFirebase = NotificationFirebase();
         final rooms = await roomFirebase.getRoomsByHospitalCode(GetData().getHospitalCode());
         
-        // Encontrar la habitación actual
         final habitacionActual = rooms.firstWhere(
           (room) => room.name == widget.habitacion,
           orElse: () => Room(
@@ -99,21 +98,18 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
           ),
         );
 
-        // Actualizar el estado del paciente
         final dbRef = FirebaseDatabase.instance.ref();
         await dbRef.child('patients').child(widget.id).update({
           'state': 'Alta',
           'dischargeDate': DateTime.now().toIso8601String(),
         });
 
-        // Incrementar el available de la habitación
         await roomFirebase.updateRoomAvailability(
           GetData().getHospitalCode(),
           habitacionActual.name,
           habitacionActual.available + 1
         );
 
-        // Notificar a todos los usuarios activos del hospital
         final staffList = GetData().getStaffList();
         final activeStaff = staffList.where((staff) => 
           staff['state'] == true && 
@@ -135,7 +131,6 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
           }
         }
 
-        // Obtener y actualizar todas las tareas pendientes del paciente
         final tasks = await tasksFirebase.getTasks(widget.dni, filterByPatient: true);
         for (var task in tasks) {
           if (!task.isDone) {
@@ -150,7 +145,7 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
               backgroundColor: Colors.green,
             ),
           );
-          Navigator.pop(context); // Regresar a la lista de pacientes
+          Navigator.pop(context);
         }
       } catch (e) {
         if (mounted) {
@@ -335,7 +330,6 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
             id
           );
 
-          // Notificar a todos los usuarios activos excepto al que realizó el cambio
           final staffList = GetData().getStaffList();
           final activeStaff = staffList.where((staff) => 
             staff['state'] == true && 
@@ -357,7 +351,6 @@ class _PatientScreenState extends State<PatientScreen> with SingleTickerProvider
             }
           }
 
-          // Mostrar notificación flotante al usuario que realizó el cambio
           if (mounted) {
             NotificationOverlay().show(
               context: context,

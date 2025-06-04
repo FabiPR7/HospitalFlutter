@@ -54,6 +54,14 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
       };
     }).toList();
 
+    final seen = <String>{};
+    patients = patients.where((patient) {
+      final id = patient['id']?.toString();
+      if (id == null || seen.contains(id)) return false;
+      seen.add(id);
+      return true;
+    }).toList();
+
     staff = (GetData().getStaffList() as List).map((staffMember) {
       final Map<dynamic, dynamic> staffMap = staffMember as Map<dynamic, dynamic>;
       return {
@@ -63,12 +71,11 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
       };
     }).where((member) => member['state'] == true).toList();
 
-    // Eliminar duplicados basados en el ID
-    final seen = <String>{};
+    final seenStaff = <String>{};
     staff = staff.where((member) {
       final id = member['id']?.toString();
-      if (id == null || seen.contains(id)) return false;
-      seen.add(id);
+      if (id == null || seenStaff.contains(id)) return false;
+      seenStaff.add(id);
       return true;
     }).toList();
 
@@ -79,15 +86,15 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: ThemeController.to.getCardColor(),
           title: Row(
             children: [
-              Icon(Icons.medical_services, color: Colors.blue[700]),
+              Icon(Icons.medical_services, color: ThemeController.to.getButtonBlue()),
               const SizedBox(width: 10),
-              const Text(
+              Text(
                 'Nueva Tarea',
                 style: TextStyle(
-                  color: Color(0xFF2641F3),
+                  color: ThemeController.to.getButtonBlue(),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -98,37 +105,43 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (patients.isEmpty)
-                  const Text('No hay pacientes disponibles')
+                  Text(
+                    'No hay pacientes disponibles',
+                    style: TextStyle(color: ThemeController.to.getTextColor()),
+                  )
                 else
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.blue[50],
+                      color: ThemeController.to.getSurfaceColor(),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         labelText: 'Paciente',
-                        labelStyle: const TextStyle(color: Color(0xFF2641F3)),
+                        labelStyle: TextStyle(color: ThemeController.to.getButtonBlue()),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFF2641F3)),
+                          borderSide: BorderSide(color: ThemeController.to.getButtonBlue()),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.blue[300]!),
+                          borderSide: BorderSide(color: ThemeController.to.getButtonBlue().withOpacity(0.5)),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Color(0xFF2641F3), width: 2),
+                          borderSide: BorderSide(color: ThemeController.to.getButtonBlue(), width: 2),
                         ),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: ThemeController.to.getCardColor(),
                       ),
                       value: selectedPatient,
                       items: patients.map((patient) {
                         return DropdownMenuItem<String>(
                           value: patient['id'].toString(),
-                          child: Text('${patient['name']} (${patient['id']})'),
+                          child: Text(
+                            '${patient['name']} (${patient['id']})',
+                            style: TextStyle(color: ThemeController.to.getTextColor()),
+                          ),
                         );
                       }).toList(),
                       onChanged: (value) {
@@ -139,28 +152,29 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
                 const SizedBox(height: 16),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.blue[50],
+                    color: ThemeController.to.getSurfaceColor(),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextField(
                     controller: descriptionController,
+                    style: TextStyle(color: ThemeController.to.getTextColor()),
                     decoration: InputDecoration(
                       labelText: 'Descripción de la tarea',
-                      labelStyle: const TextStyle(color: Color(0xFF2641F3)),
+                      labelStyle: TextStyle(color: ThemeController.to.getButtonBlue()),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFF2641F3)),
+                        borderSide: BorderSide(color: ThemeController.to.getButtonBlue()),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.blue[300]!),
+                        borderSide: BorderSide(color: ThemeController.to.getButtonBlue().withOpacity(0.5)),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFF2641F3), width: 2),
+                        borderSide: BorderSide(color: ThemeController.to.getButtonBlue(), width: 2),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: ThemeController.to.getCardColor(),
                     ),
                     maxLines: 3,
                   ),
@@ -168,38 +182,44 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
                 const SizedBox(height: 16),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.blue[50],
+                    color: ThemeController.to.getSurfaceColor(),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       labelText: 'Asignar a (opcional)',
-                      labelStyle: const TextStyle(color: Color(0xFF2641F3)),
+                      labelStyle: TextStyle(color: ThemeController.to.getButtonBlue()),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFF2641F3)),
+                        borderSide: BorderSide(color: ThemeController.to.getButtonBlue()),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.blue[300]!),
+                        borderSide: BorderSide(color: ThemeController.to.getButtonBlue().withOpacity(0.5)),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFF2641F3), width: 2),
+                        borderSide: BorderSide(color: ThemeController.to.getButtonBlue(), width: 2),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: ThemeController.to.getCardColor(),
                     ),
                     value: selectedStaff,
                     items: [
-                      const DropdownMenuItem<String>(
+                      DropdownMenuItem<String>(
                         value: null,
-                        child: Text('Sin asignar'),
+                        child: Text(
+                          'Sin asignar',
+                          style: TextStyle(color: ThemeController.to.getTextColor()),
+                        ),
                       ),
                       ...staff.map((member) {
                         return DropdownMenuItem<String>(
                           value: member['id'].toString(),
-                          child: Text(member['name'].toString()),
+                          child: Text(
+                            member['name'].toString(),
+                            style: TextStyle(color: ThemeController.to.getTextColor()),
+                          ),
                         );
                       }).toList(),
                     ],
@@ -214,10 +234,10 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text(
+              child: Text(
                 'Cancelar',
                 style: TextStyle(
-                  color: Colors.red,
+                  color: ThemeController.to.getErrorRed(),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -226,9 +246,12 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
               onPressed: () async {
                 if (selectedPatient == null || descriptionController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Por favor complete todos los campos requeridos'),
-                      backgroundColor: Colors.red,
+                    SnackBar(
+                      content: Text(
+                        'Por favor complete todos los campos requeridos',
+                        style: TextStyle(color: ThemeController.to.getTextColor()),
+                      ),
+                      backgroundColor: ThemeController.to.getErrorRed(),
                     ),
                   );
                   return;
@@ -245,7 +268,6 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
                   if (context.mounted) {
                     Navigator.pop(context);
                     if (selectedStaff != null) {
-                      // Obtener el nombre del personal asignado
                       final staffList = GetData().getStaffList() as List;
                       final assignedStaff = staffList.firstWhere(
                         (staff) => staff['codigo'] == selectedStaff,
@@ -254,12 +276,15 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Tarea asignada a ${assignedStaff['name']}'),
-                          backgroundColor: ThemeHospital.getButtonBlue(),
+                          content: Text(
+                            'Tarea asignada a ${assignedStaff['name']}',
+                            style: TextStyle(color: ThemeController.to.getTextColor()),
+                          ),
+                          backgroundColor: ThemeController.to.getButtonBlue(),
                           duration: const Duration(seconds: 3),
                           action: SnackBarAction(
                             label: 'Ver',
-                            textColor: Colors.white,
+                            textColor: ThemeController.to.getTextColor(),
                             onPressed: () {
                               // TODO: Navegar a la vista de tareas
                             },
@@ -269,8 +294,11 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: const Text('Tarea creada exitosamente'),
-                          backgroundColor: ThemeHospital.getButtonBlue(),
+                          content: Text(
+                            'Tarea creada exitosamente',
+                            style: TextStyle(color: ThemeController.to.getTextColor()),
+                          ),
+                          backgroundColor: ThemeController.to.getButtonBlue(),
                         ),
                       );
                     }
@@ -279,23 +307,26 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Error al crear la tarea: $e'),
-                        backgroundColor: Colors.red,
+                        content: Text(
+                          'Error al crear la tarea: $e',
+                          style: TextStyle(color: ThemeController.to.getTextColor()),
+                        ),
+                        backgroundColor: ThemeController.to.getErrorRed(),
                       ),
                     );
                   }
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: ThemeHospital.getButtonBlue(),
+                backgroundColor: ThemeController.to.getButtonBlue(),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Crear Tarea',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: ThemeController.to.getTextColor(),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -313,7 +344,7 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Tarea auto-asignada exitosamente'),
-            backgroundColor: ThemeHospital.getButtonBlue(),
+            backgroundColor: ThemeController.to.getButtonBlue(),
             duration: const Duration(seconds: 3),
             action: SnackBarAction(
               label: 'Ver',
@@ -349,9 +380,18 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
         ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(
+                color: ThemeController.to.getButtonBlue(),
+              ),
+            );
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: TextStyle(color: ThemeController.to.getTextColor()),
+              ),
+            );
           } else {
             final tasks = snapshot.data ?? [];
             
@@ -373,9 +413,9 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
                   showOnlyMine 
                     ? (showCompleted ? 'No tienes tareas realizadas' : 'No tienes tareas pendientes')
                     : 'No hay tareas pendientes',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey,
+                    color: ThemeController.to.getGrey(),
                   ),
                 ),
               );
@@ -396,10 +436,10 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: ThemeController.to.getCardColor(),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: Colors.black.withOpacity(0.1),
                 spreadRadius: 1,
                 blurRadius: 3,
                 offset: const Offset(0, 2),
@@ -408,9 +448,9 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
           ),
           child: TabBar(
             controller: _tabController,
-            labelColor: ThemeHospital.getButtonBlue(),
-            unselectedLabelColor: Colors.grey,
-            indicatorColor: ThemeHospital.getButtonBlue(),
+            labelColor: ThemeController.to.getButtonBlue(),
+            unselectedLabelColor: ThemeController.to.getGrey(),
+            indicatorColor: ThemeController.to.getButtonBlue(),
             tabs: const [
               Tab(
                 icon: Icon(Icons.person),
@@ -431,9 +471,9 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
           child: TabBarView(
             controller: _tabController,
             children: [
-              buildTaskList(false, true),  // Mis tareas pendientes
-              buildTaskList(false, false), // Todos pendientes
-              buildTaskList(true, true),   // Mis tareas realizadas
+              buildTaskList(false, true),
+              buildTaskList(false, false),
+              buildTaskList(true, true),
             ],
           ),
         ),
@@ -442,11 +482,12 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
 
     if (widget.showAppBar) {
       return Scaffold(
+        backgroundColor: ThemeController.to.getCardColor(),
         appBar: AppBarHospital().getAppBar(),
         floatingActionButton: FloatingActionButton(
           onPressed: () => _showAddTaskDialog(context),
-          backgroundColor: ThemeHospital.getButtonBlue(),
-          child: const Icon(Icons.add, color: Colors.white),
+          backgroundColor: ThemeController.to.getButtonBlue(),
+          child: Icon(Icons.add, color: ThemeController.to.getTextColor()),
         ),
         body: content,
       );

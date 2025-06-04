@@ -18,7 +18,7 @@ class NotificationOverlay {
     VoidCallback? onTap,
     Duration duration = const Duration(seconds: 5),
   }) {
-    _hide(); // Ocultar notificación anterior si existe
+    _hide();
 
     _overlayEntry = OverlayEntry(
       builder: (context) => NotificationMessage(

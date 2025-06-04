@@ -4,10 +4,8 @@ import 'package:mi_hospital/sections/Notifications/entities/Notification.dart';
 class NotificationFirebase {
   final DatabaseReference _notificationsRef = FirebaseDatabase.instance.ref().child('notifications');
 
-  // Crear una nueva notificación
   Future<void> createNotification(AppNotification notification) async {
     try {
-      // Crear la notificación directamente con un ID único
       await _notificationsRef.child(notification.id).set(notification.toMap());
     } catch (e) {
       print('Error al crear notificación: $e');
@@ -15,7 +13,6 @@ class NotificationFirebase {
     }
   }
 
-  // Obtener notificaciones para un usuario específico
   Stream<List<AppNotification>> getNotificationsForUser(String userCode) {
     return _notificationsRef
         .orderByChild('receiverCode')
@@ -34,12 +31,10 @@ class NotificationFirebase {
     });
   }
 
-  // Marcar una notificación como leída
   Future<void> markAsRead(String notificationId) async {
     await _notificationsRef.child(notificationId).update({'isRead': true});
   }
 
-  // Obtener el conteo de notificaciones no leídas
   Stream<int> getUnreadCount(String userCode) {
     return _notificationsRef
         .orderByChild('receiverCode')
@@ -57,7 +52,6 @@ class NotificationFirebase {
     });
   }
 
-  // Marcar todas las notificaciones como leídas
   Future<void> markAllAsRead(String userCode) async {
     final snapshot = await _notificationsRef
         .orderByChild('receiverCode')

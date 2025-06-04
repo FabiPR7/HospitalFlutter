@@ -25,7 +25,7 @@ class WidgetsLogIn {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        backgroundColor: ThemeHospital.getButtonBlue(),
+        backgroundColor: ThemeController.to.getButtonBlue(),
       ),
     );
   }
@@ -38,8 +38,8 @@ class WidgetsLogIn {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            ThemeHospital.getButtonBlue(),
-            ThemeHospital.getLightBlue(),
+            ThemeController.to.getButtonBlue(),
+            ThemeController.to.getLightBlue(),
           ],
         ),
         boxShadow: [
@@ -136,7 +136,7 @@ class WidgetsLogIn {
           ),
           labelText: text,
           labelStyle: TextStyle(
-            color: ThemeHospital.getButtonBlue().withOpacity(0.7),
+            color: ThemeController.to.getButtonBlue().withOpacity(0.7),
             fontSize: 16,
           ),
           errorStyle: const TextStyle(color: Colors.red),
@@ -145,7 +145,7 @@ class WidgetsLogIn {
             text == "Correo" ? Icons.email :
             text == "Contraseña" || text == "Confirmar Contraseña" ? Icons.lock :
             Icons.vpn_key,
-            color: ThemeHospital.getButtonBlue(),
+            color: ThemeController.to.getButtonBlue(),
           ),
           filled: true,
           fillColor: Colors.white,
@@ -179,7 +179,7 @@ class WidgetsLogIn {
             end: Alignment.bottomRight,
             colors: [
               Colors.white,
-              ThemeHospital.getBackgroundBlue().withOpacity(0.1),
+              ThemeController.to.getBackgroundBlue().withOpacity(0.1),
             ],
           ),
           boxShadow: [
@@ -221,13 +221,13 @@ class WidgetsLogIn {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        ThemeHospital.getButtonBlue(),
-                        ThemeHospital.getLightBlue(),
+                        ThemeController.to.getButtonBlue(),
+                        ThemeController.to.getLightBlue(),
                       ],
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: ThemeHospital.getButtonBlue().withOpacity(0.3),
+                        color: ThemeController.to.getButtonBlue().withOpacity(0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),

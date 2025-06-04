@@ -19,7 +19,6 @@ class MessageScreen extends StatelessWidget {
     required this.personalCode,
     required this.senderCode,
   }) : super(key: key) {
-    // Marcar mensajes como leídos al entrar
     _markMessagesAsRead();
   }
 
@@ -38,8 +37,8 @@ class MessageScreen extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               Colors.white,
-              ThemeHospital.getBackgroundBlue().withOpacity(0.1),
-              ThemeHospital.getLightBlue().withOpacity(0.2),
+              ThemeController.to.getBackgroundBlue().withOpacity(0.1),
+              ThemeController.to.getLightBlue().withOpacity(0.2),
             ],
           ),
         ),
@@ -53,8 +52,8 @@ class MessageScreen extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      ThemeHospital.getButtonBlue(),
-                      ThemeHospital.getLightBlue(),
+                      ThemeController.to.getButtonBlue(),
+                      ThemeController.to.getLightBlue(),
                     ],
                   ),
                   boxShadow: [
@@ -95,7 +94,7 @@ class MessageScreen extends StatelessWidget {
                       ),
                       child: CircleAvatar(
                         radius: 20,
-                        backgroundColor: ThemeHospital.getLightBlue(),
+                        backgroundColor: ThemeController.to.getLightBlue(),
                         child: Text(
                           userName.isNotEmpty ? userName[0].toUpperCase() : '?',
                           style: const TextStyle(

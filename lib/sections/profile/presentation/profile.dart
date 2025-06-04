@@ -52,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Datos actualizados exitosamente'),
-            backgroundColor: ThemeHospital.getButtonBlue(),
+            backgroundColor: ThemeController.to.getButtonBlue(),
             duration: const Duration(seconds: 2),
           ),
         );
@@ -72,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ThemeController.to.getCardColor(),
       appBar: AppBarHospital().getAppBar(),
       body: Container(
         width: double.infinity,
@@ -80,8 +80,8 @@ class _ProfilePageState extends State<ProfilePage> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              ThemeHospital.getButtonBlue().withOpacity(0.1),
-              Colors.white,
+              ThemeController.to.getButtonBlue().withOpacity(0.1),
+              ThemeController.to.getCardColor(),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -101,11 +101,11 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: ThemeController.to.getCardColor(),
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
+                      color: Colors.black.withOpacity(0.1),
                       spreadRadius: 1,
                       blurRadius: 10,
                       offset: const Offset(0, 2),
@@ -126,11 +126,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: ThemeController.to.getCardColor(),
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
+                      color: Colors.black.withOpacity(0.1),
                       spreadRadius: 1,
                       blurRadius: 10,
                       offset: const Offset(0, 2),
@@ -147,32 +147,32 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.info_outline, color: ThemeHospital.getButtonBlue()),
+                              Icon(Icons.info_outline, color: ThemeController.to.getButtonBlue()),
                               const SizedBox(width: 12),
                               Text(
                                 'Información del Perfil',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: ThemeHospital.getButtonBlue(),
+                                  color: ThemeController.to.getButtonBlue(),
                                 ),
                               ),
                             ],
                           ),
                           if (!_isEditing)
                             IconButton(
-                              icon: Icon(Icons.edit, color: ThemeHospital.getButtonBlue()),
+                              icon: Icon(Icons.edit, color: ThemeController.to.getButtonBlue()),
                               onPressed: () => setState(() => _isEditing = true),
                             )
                           else
                             Row(
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.check, color: Colors.green),
+                                  icon: Icon(Icons.check, color: ThemeController.to.getSuccessGreen()),
                                   onPressed: _saveChanges,
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.close, color: Colors.red),
+                                  icon: Icon(Icons.close, color: ThemeController.to.getErrorRed()),
                                   onPressed: () {
                                     setState(() {
                                       _isEditing = false;
@@ -242,7 +242,7 @@ class _ProfilePageState extends State<ProfilePage> {
   ) {
     return Row(
       children: [
-        Icon(icon, color: Colors.grey[600], size: 20),
+        Icon(icon, color: ThemeController.to.getGrey(), size: 20),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -252,7 +252,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 label,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey[600],
+                  color: ThemeController.to.getGrey(),
                 ),
               ),
               const SizedBox(height: 4),
@@ -265,32 +265,34 @@ class _ProfilePageState extends State<ProfilePage> {
                     ? [FilteringTextInputFormatter.digitsOnly]
                     : null,
                   maxLength: label == 'Teléfono' ? 9 : null,
+                  style: TextStyle(color: ThemeController.to.getTextColor()),
                   decoration: InputDecoration(
                     isDense: true,
                     contentPadding: const EdgeInsets.symmetric(vertical: 8),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: ThemeHospital.getButtonBlue()),
+                      borderSide: BorderSide(color: ThemeController.to.getButtonBlue()),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
+                      borderSide: BorderSide(color: ThemeController.to.getGrey()),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: ThemeHospital.getButtonBlue()),
+                      borderSide: BorderSide(color: ThemeController.to.getButtonBlue()),
                     ),
                     counterText: '',
                     hintText: label == 'Teléfono' ? '9 dígitos' : 'ejemplo@correo.com',
+                    hintStyle: TextStyle(color: ThemeController.to.getGrey()),
                   ),
                 )
               else
                 Text(
                   controller.text.isEmpty ? 'No disponible' : controller.text,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black87,
+                    color: ThemeController.to.getTextColor(),
                   ),
                 ),
             ],
@@ -303,7 +305,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildInfoItem(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, color: Colors.grey[600], size: 20),
+        Icon(icon, color: ThemeController.to.getGrey(), size: 20),
         const SizedBox(width: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,16 +314,16 @@ class _ProfilePageState extends State<ProfilePage> {
               label,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey[600],
+                color: ThemeController.to.getGrey(),
               ),
             ),
             const SizedBox(height: 4),
             Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                color: ThemeController.to.getTextColor(),
               ),
             ),
           ],

@@ -71,7 +71,7 @@ class _PacientesScreenState extends State<PacientesScreen> {
             ),
           );
         },
-        backgroundColor: ThemeHospital.getButtonBlue(),
+        backgroundColor: ThemeController.to.getButtonBlue(),
         elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -87,7 +87,7 @@ class _PacientesScreenState extends State<PacientesScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: ThemeHospital.getWhite(),
+              color: ThemeController.to.getWhite(),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.1),
@@ -107,29 +107,29 @@ class _PacientesScreenState extends State<PacientesScreen> {
                 ),
                 prefixIcon: Icon(
                   Icons.search,
-                  color: ThemeHospital.getButtonBlue(),
+                  color: ThemeController.to.getButtonBlue(),
                   size: 24,
                 ),
                 filled: true,
-                fillColor: ThemeHospital.getBackgroundBlue().withOpacity(0.3),
+                fillColor: ThemeController.to.getBackgroundBlue().withOpacity(0.3),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                    color: ThemeHospital.getButtonBlue().withOpacity(0.2),
+                    color: ThemeController.to.getButtonBlue().withOpacity(0.2),
                     width: 1,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                    color: ThemeHospital.getButtonBlue().withOpacity(0.2),
+                    color: ThemeController.to.getButtonBlue().withOpacity(0.2),
                     width: 1,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                    color: ThemeHospital.getButtonBlue(),
+                    color: ThemeController.to.getButtonBlue(),
                     width: 2,
                   ),
                 ),
@@ -166,7 +166,7 @@ class _PacientesScreenState extends State<PacientesScreen> {
                   )
                 : RefreshIndicator(
                     onRefresh: _cargarPacientes,
-                    color: ThemeHospital.getButtonBlue(),
+                    color: ThemeController.to.getButtonBlue(),
                     child: ListView.builder(
                       padding: const EdgeInsets.all(12),
                       itemCount: _pacientesFiltrados.length,

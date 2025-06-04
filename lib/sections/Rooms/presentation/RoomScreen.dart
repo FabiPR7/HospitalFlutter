@@ -59,7 +59,7 @@ class _RoomScreenState extends State<RoomScreen> {
       appBar: AppBarHospital().getAppBar(),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddRoomDialog,
-        backgroundColor: ThemeHospital.getButtonBlue(),
+        backgroundColor: ThemeController.to.getButtonBlue(),
         elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),

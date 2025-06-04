@@ -6,20 +6,17 @@ class ProfileFirebase {
 
   Future<void> updateUserProfile(String codigo, Map<String, dynamic> newData) async {
     try {
-      // Buscar el usuario por su código
       final snapshot = await _dbRef.child('users').orderByChild('codigo').equalTo(codigo).once();
       
       if (snapshot.snapshot.exists) {
         final data = snapshot.snapshot.value as Map<dynamic, dynamic>;
         final userId = data.keys.first;
         
-        // Actualizar en Firebase
         await _dbRef.child('users/$userId').update({
           'correo': newData['correo'],
           'telefono': newData['telefono'],
         });
 
-        // Actualizar los datos locales
         await GetData().updateUserData(newData);
       } else {
         throw Exception('Usuario no encontrado');

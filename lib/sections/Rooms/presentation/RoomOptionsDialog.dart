@@ -24,7 +24,7 @@ class RoomOptionsDialog extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: ThemeHospital.getWhite(),
+          color: ThemeController.to.getWhite(),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -41,12 +41,12 @@ class RoomOptionsDialog extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: ThemeHospital.getButtonBlue().withOpacity(0.1),
+                color: ThemeController.to.getButtonBlue().withOpacity(0.1),
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.meeting_room, color: ThemeHospital.getButtonBlue(), size: 28),
+                  Icon(Icons.meeting_room, color: ThemeController.to.getButtonBlue(), size: 28),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -54,7 +54,7 @@ class RoomOptionsDialog extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: ThemeHospital.getButtonBlue(),
+                        color: ThemeController.to.getButtonBlue(),
                       ),
                     ),
                   ),
@@ -102,7 +102,7 @@ class RoomOptionsDialog extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: const Text('Habitación eliminada exitosamente'),
-                            backgroundColor: ThemeHospital.getButtonBlue(),
+                            backgroundColor: ThemeController.to.getButtonBlue(),
                           ),
                         );
                       }
@@ -111,14 +111,14 @@ class RoomOptionsDialog extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: const Text('Error al eliminar la habitación'),
-                            backgroundColor: ThemeHospital.getErrorRed(),
+                            backgroundColor: ThemeController.to.getErrorRed(),
                           ),
                         );
                       }
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: ThemeHospital.getErrorRed(),
+                    backgroundColor: ThemeController.to.getErrorRed(),
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -129,7 +129,7 @@ class RoomOptionsDialog extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: ThemeHospital.getWhite(),
+                      color: ThemeController.to.getWhite(),
                     ),
                   ),
                 ),
@@ -148,7 +148,7 @@ class RoomOptionsDialog extends StatelessWidget {
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: ThemeHospital.getButtonBlue().withOpacity(0.2),
+          color: ThemeController.to.getButtonBlue().withOpacity(0.2),
           width: 1,
         ),
       ),
@@ -156,7 +156,7 @@ class RoomOptionsDialog extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: isAvailable ? ThemeHospital.getButtonBlue() : ThemeHospital.getErrorRed(),
+            color: isAvailable ? ThemeController.to.getButtonBlue() : ThemeController.to.getErrorRed(),
             size: 24,
           ),
           const SizedBox(width: 12),
@@ -177,7 +177,7 @@ class RoomOptionsDialog extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: isAvailable ? ThemeHospital.getButtonBlue() : ThemeHospital.getErrorRed(),
+                    color: isAvailable ? ThemeController.to.getButtonBlue() : ThemeController.to.getErrorRed(),
                   ),
                 ),
               ],

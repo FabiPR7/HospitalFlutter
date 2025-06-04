@@ -149,8 +149,8 @@ class _MessageWidgetState extends State<MessageWidget> {
                         ),
                         decoration: BoxDecoration(
                           color: isMe 
-                              ? ThemeHospital.getButtonBlue()
-                              : Colors.white,
+                              ? ThemeController.to.getButtonBlue()
+                              : ThemeController.to.getCardColor(),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
@@ -166,7 +166,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                             Text(
                               message.content,
                               style: TextStyle(
-                                color: isMe ? Colors.white : Colors.black87,
+                                color: isMe ? Colors.white : ThemeController.to.getTextColor(),
                                 fontSize: 16,
                               ),
                             ),
@@ -174,7 +174,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                             Text(
                               _formatTime(message.timestamp),
                               style: TextStyle(
-                                color: isMe ? Colors.white70 : Colors.grey[600],
+                                color: isMe ? Colors.white70 : ThemeController.to.getGrey(),
                                 fontSize: 12,
                               ),
                             ),
@@ -186,7 +186,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                         child: Text(
                           isMe ? message.senderCode : message.personalCode,
                           style: TextStyle(
-                            color: Colors.grey[600],
+                            color: ThemeController.to.getGrey(),
                             fontSize: 12,
                           ),
                         ),
@@ -201,10 +201,10 @@ class _MessageWidgetState extends State<MessageWidget> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: ThemeController.to.getCardColor(),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.black.withOpacity(0.1),
                 spreadRadius: 1,
                 blurRadius: 3,
                 offset: const Offset(0, -1),
@@ -216,7 +216,7 @@ class _MessageWidgetState extends State<MessageWidget> {
               IconButton(
                 icon: Icon(
                   Icons.attach_file,
-                  color: ThemeHospital.getButtonBlue(),
+                  color: ThemeController.to.getButtonBlue(),
                 ),
                 onPressed: () {
                   // TODO: Implementar adjuntar archivos
@@ -226,16 +226,17 @@ class _MessageWidgetState extends State<MessageWidget> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: ThemeHospital.getBackgroundBlue().withOpacity(0.3),
+                    color: ThemeController.to.getSurfaceColor(),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: TextField(
                     controller: _messageController,
+                    style: TextStyle(color: ThemeController.to.getTextColor()),
                     decoration: InputDecoration(
                       hintText: 'Escribe un mensaje...',
                       border: InputBorder.none,
                       hintStyle: TextStyle(
-                        color: Colors.grey[600],
+                        color: ThemeController.to.getGrey(),
                       ),
                     ),
                     maxLines: null,
@@ -246,7 +247,7 @@ class _MessageWidgetState extends State<MessageWidget> {
               const SizedBox(width: 8),
               Container(
                 decoration: BoxDecoration(
-                  color: ThemeHospital.getButtonBlue(),
+                  color: ThemeController.to.getButtonBlue(),
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(

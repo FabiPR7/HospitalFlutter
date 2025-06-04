@@ -7,10 +7,10 @@ class widgets_Profile{
  Widget getWidgetNameSurName(String name, String surname){
     return  Text(
               '${name.replaceAll('}', '')} ${surname.replaceAll('}', '')}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF2641F3),
+                color: ThemeController.to.getButtonBlue(),
                 letterSpacing: 0.5,
               ),
             );
@@ -20,15 +20,15 @@ class widgets_Profile{
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.blue[50],
+        color: ThemeController.to.getSurfaceColor(),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: ThemeHospital.getButtonBlue().withOpacity(0.3)),
+        border: Border.all(color: ThemeController.to.getButtonBlue().withOpacity(0.3)),
       ),
       child: Text(
         'Código: $code',
         style: TextStyle(
           fontSize: 16,
-          color: Colors.blue[900],
+          color: ThemeController.to.getTextColor(),
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -39,12 +39,12 @@ class widgets_Profile{
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.red[50],
+        color: ThemeController.to.getErrorRed().withOpacity(0.1),
         shape: BoxShape.circle,
       ),
-      child: const Icon(
+      child: Icon(
         Icons.local_hospital,
-        color: Color(0xFFE53935),
+        color: ThemeController.to.getErrorRed(),
         size: 30,
       ),
     );
@@ -54,15 +54,15 @@ class widgets_Profile{
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.red[50],
+        color: ThemeController.to.getErrorRed().withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.red[200]!),
+        border: Border.all(color: ThemeController.to.getErrorRed().withOpacity(0.3)),
       ),
       child: Text(
         hospital,
         style: TextStyle(
           fontSize: 16,
-          color: Colors.red[900],
+          color: ThemeController.to.getErrorRed(),
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -76,15 +76,15 @@ class widgets_Profile{
         shape: BoxShape.circle,
         gradient: LinearGradient(
           colors: [
-            ThemeHospital.getButtonBlue(),
-            ThemeHospital.getButtonBlue().withOpacity(0.7),
+            ThemeController.to.getButtonBlue(),
+            ThemeController.to.getButtonBlue().withOpacity(0.7),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         boxShadow: [
           BoxShadow(
-            color: ThemeHospital.getButtonBlue().withOpacity(0.3),
+            color: ThemeController.to.getButtonBlue().withOpacity(0.3),
             spreadRadius: 2,
             blurRadius: 8,
             offset: const Offset(0, 4),
@@ -97,7 +97,7 @@ class widgets_Profile{
         child: Icon(
           Icons.medical_services_outlined,
           size: 50,
-          color: ThemeHospital.getButtonBlue(),
+          color: ThemeController.to.getButtonBlue(),
         ),
       ),
     );

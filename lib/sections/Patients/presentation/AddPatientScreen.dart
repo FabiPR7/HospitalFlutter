@@ -127,7 +127,6 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       });
 
       try {
-        // Verificar disponibilidad de la habitación
         final roomFirebase = RoomFirebase();
         final rooms = await roomFirebase.getRoomsByHospitalCode(GetData().getHospitalCode());
         final selectedRoom = rooms.firstWhere((room) => room.id == _selectedRoomId);
@@ -137,7 +136,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('No hay camillas disponibles en la habitación ${selectedRoom.name}'),
-                backgroundColor: ThemeHospital.getErrorRed(),
+                backgroundColor: ThemeController.to.getErrorRed(),
               ),
             );
             setState(() {
@@ -163,7 +162,6 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
           'img': 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png',
         };
 
-        // Actualizar la disponibilidad de la habitación
         await roomFirebase.updateRoomAvailability(
           GetData().getHospitalCode(),
           selectedRoom.name,
@@ -171,8 +169,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
         );
 
         await pacienteFirebase.addPatient(paciente, context: context);
-
-        // Guardar todas las tareas
+    
         for (var tarea in _tareas) {
           await _tasksFirebase.add_task(
             description: tarea['description'],
@@ -186,7 +183,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Paciente guardado exitosamente'),
-              backgroundColor: ThemeHospital.getButtonBlue(),
+              backgroundColor: ThemeController.to.getButtonBlue(),
             ),
           );
           Navigator.pop(context);
@@ -196,7 +193,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Error al guardar: $e'),
-              backgroundColor: ThemeHospital.getErrorRed(),
+              backgroundColor: ThemeController.to.getErrorRed(),
             ),
           );
           setState(() {
@@ -226,7 +223,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: ThemeHospital.getButtonBlue(),
+          color: ThemeController.to.getButtonBlue(),
         ),
       ),
     );
@@ -237,8 +234,8 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       onPressed: _isSaving ? null : onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: _isSaving 
-          ? ThemeHospital.getButtonBlue().withOpacity(0.5)
-          : ThemeHospital.getButtonBlue(),
+          ? ThemeController.to.getButtonBlue().withOpacity(0.5)
+          : ThemeController.to.getButtonBlue(),
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -292,30 +289,30 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
-        prefixIcon: Icon(prefixIcon, color: ThemeHospital.getButtonBlue()),
+        prefixIcon: Icon(prefixIcon, color: ThemeController.to.getButtonBlue()),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: ThemeHospital.getButtonBlue().withOpacity(0.2),
+            color: ThemeController.to.getButtonBlue().withOpacity(0.2),
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: ThemeHospital.getButtonBlue().withOpacity(0.2),
+            color: ThemeController.to.getButtonBlue().withOpacity(0.2),
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: ThemeHospital.getButtonBlue(),
+            color: ThemeController.to.getButtonBlue(),
             width: 2,
           ),
         ),
         filled: true,
-        fillColor: ThemeHospital.getBackgroundBlue().withOpacity(0.1),
+        fillColor: ThemeController.to.getBackgroundBlue().withOpacity(0.1),
         labelStyle: TextStyle(
-          color: ThemeHospital.getButtonBlue().withOpacity(0.7),
+          color: ThemeController.to.getButtonBlue().withOpacity(0.7),
         ),
         hintStyle: TextStyle(
           color: Colors.grey[400],
@@ -332,30 +329,30 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       decoration: InputDecoration(
         labelText: 'Habitación',
         hintText: 'Seleccione una habitación',
-        prefixIcon: Icon(Icons.room, color: ThemeHospital.getButtonBlue()),
+        prefixIcon: Icon(Icons.room, color: ThemeController.to.getButtonBlue()),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: ThemeHospital.getButtonBlue().withOpacity(0.2),
+            color: ThemeController.to.getButtonBlue().withOpacity(0.2),
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: ThemeHospital.getButtonBlue().withOpacity(0.2),
+            color: ThemeController.to.getButtonBlue().withOpacity(0.2),
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: ThemeHospital.getButtonBlue(),
+            color: ThemeController.to.getButtonBlue(),
             width: 2,
           ),
         ),
         filled: true,
-        fillColor: ThemeHospital.getBackgroundBlue().withOpacity(0.1),
+        fillColor: ThemeController.to.getBackgroundBlue().withOpacity(0.1),
         labelStyle: TextStyle(
-          color: ThemeHospital.getButtonBlue().withOpacity(0.7),
+          color: ThemeController.to.getButtonBlue().withOpacity(0.7),
         ),
       ),
       items: _rooms.where((room) => room.available > 0).map((room) {
@@ -385,7 +382,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(
-                color: ThemeHospital.getButtonBlue(),
+                color: ThemeController.to.getButtonBlue(),
               ),
             )
           : SingleChildScrollView(
@@ -398,14 +395,14 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: ThemeHospital.getButtonBlue().withOpacity(0.1),
+                        color: ThemeController.to.getButtonBlue().withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         children: [
                           Icon(
                             Icons.person_add,
-                            color: ThemeHospital.getButtonBlue(),
+                            color: ThemeController.to.getButtonBlue(),
                             size: 28,
                           ),
                           const SizedBox(width: 12),
@@ -414,7 +411,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: ThemeHospital.getButtonBlue(),
+                              color: ThemeController.to.getButtonBlue(),
                             ),
                           ),
                         ],
@@ -496,14 +493,14 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: ThemeHospital.getButtonBlue().withOpacity(0.1),
+                        color: ThemeController.to.getButtonBlue().withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         children: [
                           Icon(
                             Icons.task_alt,
-                            color: ThemeHospital.getButtonBlue(),
+                                color: ThemeController.to.getButtonBlue(),
                             size: 28,
                           ),
                           const SizedBox(width: 12),
@@ -512,7 +509,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: ThemeHospital.getButtonBlue(),
+                              color: ThemeController.to.getButtonBlue(),
                             ),
                           ),
                         ],
@@ -534,7 +531,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           onPressed: _addTask,
                           icon: Icon(
                             Icons.add_circle,
-                            color: ThemeHospital.getButtonBlue(),
+                            color: ThemeController.to.getButtonBlue(),
                             size: 32,
                           ),
                         ),
@@ -582,14 +579,14 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                               IconButton(
                                 icon: Icon(
                                   Icons.person_add,
-                                  color: ThemeHospital.getButtonBlue(),
+                                  color: ThemeController.to.getButtonBlue(),
                                 ),
                                 onPressed: () => _showAssignDialog(entry.key),
                               ),
                               IconButton(
                                 icon: Icon(
                                   Icons.delete,
-                                  color: ThemeHospital.getErrorRed(),
+                                  color: ThemeController.to.getErrorRed(),
                                 ),
                                 onPressed: () => _deleteTask(entry.key),
                               ),

@@ -46,10 +46,8 @@ class WidgetsRoomState extends State<WidgetsRoom> {
   void applyFilters() {
     setState(() {
       filteredRooms = rooms.where((room) {
-        // Filtro de piso
         bool matchesFloor = selectedFloor == null || room.floor == selectedFloor;
         
-        // Filtro de disponibilidad
         bool matchesAvailability = !showOnlyAvailable || (room.available > 0);
         
         return matchesFloor && matchesAvailability;
@@ -68,7 +66,7 @@ class WidgetsRoomState extends State<WidgetsRoom> {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: selectedFloor != null ? ThemeHospital.getLightBlue() : Colors.grey[200],
+                color: selectedFloor != null ? ThemeController.to.getLightBlue() : Colors.grey[200],
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -76,14 +74,14 @@ class WidgetsRoomState extends State<WidgetsRoom> {
                 children: [
                   Icon(
                     Icons.layers,
-                    color: selectedFloor != null ? ThemeHospital.getWhite() : Colors.grey[700],
+                    color: selectedFloor != null ? ThemeController.to.getWhite() : Colors.grey[700],
                     size: 20,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     selectedFloor != null ? 'Piso $selectedFloor' : 'Piso',
                     style: TextStyle(
-                      color: selectedFloor != null ? ThemeHospital.getWhite() : Colors.grey[700],
+                      color: selectedFloor != null ? ThemeController.to.getWhite() : Colors.grey[700],
                       fontSize: 13,
                     ),
                   ),
@@ -96,7 +94,7 @@ class WidgetsRoomState extends State<WidgetsRoom> {
                 child: Text(
                   'Todos los pisos',
                   style: TextStyle(
-                    color: selectedFloor == null ? ThemeHospital.getLightBlue() : Colors.black,
+                    color: selectedFloor == null ? ThemeController.to.getLightBlue() : Colors.black,
                     fontWeight: selectedFloor == null ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
@@ -106,7 +104,7 @@ class WidgetsRoomState extends State<WidgetsRoom> {
                 child: Text(
                   'Piso $floor',
                   style: TextStyle(
-                    color: selectedFloor == floor ? ThemeHospital.getLightBlue() : Colors.black,
+                    color: selectedFloor == floor ? ThemeController.to.getLightBlue() : Colors.black,
                     fontWeight: selectedFloor == floor ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
@@ -129,7 +127,7 @@ class WidgetsRoomState extends State<WidgetsRoom> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: showOnlyAvailable ? ThemeHospital.getLightBlue() : Colors.grey[200],
+                color: showOnlyAvailable ? ThemeController.to.getLightBlue() : Colors.grey[200],
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -137,14 +135,14 @@ class WidgetsRoomState extends State<WidgetsRoom> {
                 children: [
                   Icon(
                     Icons.bed,
-                    color: showOnlyAvailable ? ThemeHospital.getWhite() : Colors.grey[700],
+                    color: showOnlyAvailable ? ThemeController.to.getWhite() : Colors.grey[700],
                     size: 20,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     'Disponibles',
                     style: TextStyle(
-                      color: showOnlyAvailable ? ThemeHospital.getWhite() : Colors.grey[700],
+                      color: showOnlyAvailable ? ThemeController.to.getWhite() : Colors.grey[700],
                       fontSize: 13,
                     ),
                   ),
@@ -180,8 +178,8 @@ class WidgetsRoomState extends State<WidgetsRoom> {
         elevation: 3,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         color: room.stretches != occupied
-            ? ThemeHospital.getWhite()
-            : ThemeHospital.getErrorRed(),
+            ? ThemeController.to.getWhite()
+            : ThemeController.to.getErrorRed(),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -228,8 +226,8 @@ class WidgetsRoomState extends State<WidgetsRoom> {
       style: TextStyle(
         fontSize: fontSize,
         color: room.stretches != occupied
-            ? ThemeHospital.getLightBlue()
-            : ThemeHospital.getWhite(),
+            ? ThemeController.to.getLightBlue()
+            : ThemeController.to.getWhite(),
       ),
     );
   }
@@ -240,8 +238,8 @@ class WidgetsRoomState extends State<WidgetsRoom> {
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
       decoration: BoxDecoration(
         color: room.stretches != occupied
-            ? ThemeHospital.getBackgroundBlue()
-            : ThemeHospital.getWhite(),
+            ? ThemeController.to.getBackgroundBlue()
+            : ThemeController.to.getWhite(),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -249,8 +247,8 @@ class WidgetsRoomState extends State<WidgetsRoom> {
         style: TextStyle(
           fontSize: 14,
           color: room.stretches != occupied
-              ? ThemeHospital.getDarkBlue()
-              : ThemeHospital.getErrorRed(),
+              ? ThemeController.to.getDarkBlue()
+              : ThemeController.to.getErrorRed(),
           fontWeight: FontWeight.w600,
         ),
       ),

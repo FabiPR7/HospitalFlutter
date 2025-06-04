@@ -35,7 +35,6 @@ class RoomFirebase {
   }) async {
     final databaseRef = FirebaseDatabase.instance.ref('rooms');
     try {
-      // Verificar si ya existe una habitación con el mismo nombre en el mismo hospital
       final snapshot = await databaseRef.get();
       if (snapshot.exists) {
         final roomsData = snapshot.value as Map<dynamic, dynamic>;
@@ -104,12 +103,10 @@ class RoomFirebase {
 
   Future<void> updateRoomsOccupancy(String currentRoomName, String newRoomId) async {
     try {
-      // Obtener todas las habitaciones
       final snapshot = await _dbRef.child('rooms').get();
       if (snapshot.exists) {
         final roomsData = snapshot.value as Map<dynamic, dynamic>;
         
-        // Encontrar la habitación actual por nombre
         String? currentRoomId;
         for (var entry in roomsData.entries) {
           final roomData = entry.value as Map<dynamic, dynamic>;
@@ -120,7 +117,6 @@ class RoomFirebase {
         }
 
         if (currentRoomId != null) {
-          // Actualizar la disponibilidad de ambas habitaciones
           await _dbRef.child('rooms').child(currentRoomId).update({
             'available': ServerValue.increment(1),
           });

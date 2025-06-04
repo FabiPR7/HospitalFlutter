@@ -3,7 +3,6 @@ import 'package:firebase_database/firebase_database.dart';
 class LogInFirebase {
   final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
 
-  // Verifica si el código ya está en uso por algún usuario
   Future<bool> isCodeInUse(String code) async {
     try {
       final snapshot = await _databaseReference

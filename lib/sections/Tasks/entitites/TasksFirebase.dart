@@ -73,7 +73,6 @@ class Tasksfirebase {
       if (assignedTo != null) {
         taskData['assignedTo'] = assignedTo;
         
-        // Crear notificación para el usuario asignado
         final staffList = GetData().getStaffList() as List;
         final assignedStaff = staffList.firstWhere(
           (staff) => staff['codigo'] == assignedTo,
@@ -92,7 +91,6 @@ class Tasksfirebase {
 
         await _notificationFirebase.createNotification(notification);
 
-        // Mostrar notificación flotante si hay contexto
         if (context != null) {
           NotificationOverlay().show(
             context: context,
@@ -105,14 +103,12 @@ class Tasksfirebase {
           );
         }
       } else {
-        // Si la tarea no está asignada, notificar a todos los usuarios activos
         final staffList = GetData().getStaffList() as List;
         final activeStaff = staffList.where((staff) => staff['state'] == true).toList();
         
         for (var staff in activeStaff) {
           final staffCode = staff['codigo'] as String;
           
-          // No notificar al creador de la tarea
           if (staffCode != createdBy) {
             final notification = AppNotification(
               id: DateTime.now().millisecondsSinceEpoch.toString() + '_$staffCode',
@@ -128,7 +124,6 @@ class Tasksfirebase {
           }
         }
 
-        // Mostrar notificación flotante al creador si hay contexto
         if (context != null) {
           NotificationOverlay().show(
             context: context,
@@ -172,7 +167,6 @@ class Tasksfirebase {
 
         await _notificationFirebase.createNotification(notification);
 
-        // Mostrar notificación flotante si hay contexto
         if (context != null) {
           NotificationOverlay().show(
             context: context,
@@ -180,7 +174,7 @@ class Tasksfirebase {
             message: 'Te has auto-asignado una tarea',
             type: 'task',
             onTap: () {
-              // TODO: Navegar a la vista de tareas
+             
             },
           );
         }

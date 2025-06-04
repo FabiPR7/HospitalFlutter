@@ -54,23 +54,23 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
               decoration: InputDecoration(
                 hintText: 'Buscar...',
                 filled: true,
-                fillColor: const Color(0xFFF1F1F1),
+                fillColor: ThemeController.to.getSurfaceColor(),
                 contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide(color: Colors.grey.shade400),
+                  borderSide: BorderSide(color: ThemeController.to.getGrey()),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
+                  borderSide: BorderSide(color: ThemeController.to.getGrey().withOpacity(0.5)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
-                  borderSide: const BorderSide(color: Colors.blue, width: 2),
+                  borderSide: BorderSide(color: ThemeController.to.getButtonBlue(), width: 2),
                 ),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear),
+                        icon: Icon(Icons.clear, color: ThemeController.to.getTextColor()),
                         onPressed: () {
                           setState(() {
                             _searchController.clear();
@@ -80,7 +80,10 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
                       )
                     : null,
               ),
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(
+                fontSize: 16,
+                color: ThemeController.to.getTextColor(),
+              ),
             ),
           ),
         ],
@@ -93,11 +96,25 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
       future: crearColumnConUsuarios(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: CircularProgressIndicator(
+              color: ThemeController.to.getButtonBlue(),
+            ),
+          );
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
+          return Center(
+            child: Text(
+              'Error: ${snapshot.error}',
+              style: TextStyle(color: ThemeController.to.getTextColor()),
+            ),
+          );
         } else if (!snapshot.hasData || snapshot.data == null) {
-          return const Center(child: Text('No se encontraron usuarios.'));
+          return Center(
+            child: Text(
+              'No se encontraron usuarios.',
+              style: TextStyle(color: ThemeController.to.getTextColor()),
+            ),
+          );
         } else {
           return snapshot.data!;
         }
@@ -128,11 +145,11 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
             margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: ThemeController.to.getCardColor(),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.black.withOpacity(0.1),
                     spreadRadius: 1,
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -147,7 +164,7 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
                       Container(
                         width: 4,
                         decoration: BoxDecoration(
-                          color: estado ? Colors.green : Colors.red,
+                          color: estado ? ThemeController.to.getSuccessGreen() : ThemeController.to.getErrorRed(),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(12),
                             bottomLeft: Radius.circular(12),
@@ -167,9 +184,10 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
                                   children: [
                                     Text(
                                       nombre,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w600,
+                                        color: ThemeController.to.getTextColor(),
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
@@ -179,7 +197,7 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
                                       codigo,
                                       style: TextStyle(
                                         fontSize: 13,
-                                        color: Colors.grey[600],
+                                        color: ThemeController.to.getGrey(),
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
@@ -190,13 +208,17 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: estado ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                                  color: estado 
+                                    ? ThemeController.to.getSuccessGreen().withOpacity(0.1) 
+                                    : ThemeController.to.getErrorRed().withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
                                   estado ? 'En turno' : 'Fuera de turno',
                                   style: TextStyle(
-                                    color: estado ? Colors.green : Colors.red,
+                                    color: estado 
+                                      ? ThemeController.to.getSuccessGreen() 
+                                      : ThemeController.to.getErrorRed(),
                                     fontWeight: FontWeight.w500,
                                     fontSize: 13,
                                   ),
@@ -217,8 +239,8 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              ThemeHospital.getButtonBlue(),
-                              ThemeHospital.getLightBlue(),
+                              ThemeController.to.getButtonBlue(),
+                              ThemeController.to.getLightBlue(),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -226,7 +248,7 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: ThemeHospital.getButtonBlue().withOpacity(0.3),
+                              color: ThemeController.to.getButtonBlue().withOpacity(0.3),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -265,7 +287,6 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
   Future<Widget> crearColumnConUsuarios() async {
     List<Map> users = await StaffFirebase().getUsersWithSamePrefix(GetData().getHospitalCode());
 
-    // Filtrar usuarios según la búsqueda
     if (_searchQuery.isNotEmpty) {
       users = users.where((user) {
         final name = (user['name'] ?? '').toString().toLowerCase();
@@ -274,7 +295,6 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
       }).toList();
     }
 
-    // Separar usuarios por estado
     List<Map> enTurno = users.where((user) => user['state'] == true).toList();
     List<Map> fueraDeTurno = users.where((user) => user['state'] == false).toList();
 
@@ -285,14 +305,14 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (enTurno.isNotEmpty) ...[
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: Text(
                   'Personal en turno',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    color: ThemeController.to.getSuccessGreen(),
                   ),
                 ),
               ),
@@ -303,14 +323,14 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
                   )),
             ],
             if (fueraDeTurno.isNotEmpty) ...[
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
                 child: Text(
                   'Personal fuera de turno',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.red,
+                    color: ThemeController.to.getErrorRed(),
                   ),
                 ),
               ),
@@ -321,14 +341,14 @@ class _WidgetsStaffState extends State<WidgetsStaff> {
                   )),
             ],
             if (enTurno.isEmpty && fueraDeTurno.isEmpty) ...[
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Center(
                   child: Text(
                     'No se encontraron resultados',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.grey,
+                      color: ThemeController.to.getGrey(),
                     ),
                   ),
                 ),

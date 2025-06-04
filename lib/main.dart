@@ -9,12 +9,17 @@ import 'package:mi_hospital/sections/Profile/presentation/profile.dart';
 import 'package:mi_hospital/sections/Settings/presentation/setting.dart';
 import 'package:mi_hospital/sections/Sign_in/presentation/sign_in.dart';
 import 'package:mi_hospital/appConfig/presentation/theme/Theme.dart';
+import 'package:mi_hospital/sections/Settings/domain/notifications_controller.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 var datos;
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  Get.put(ThemeController());
+  Get.put(NotificationsController());
   datos = await LoadData().data();
   runApp(const MyApp());
 }
@@ -27,8 +32,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Mi Hospital',
       debugShowCheckedModeBanner: false,
-      theme: ThemeHospital(color: 5).themeData(),
-      home: datos["userLogin"] != null ? MainMenuScreen() : SignInScreen(),
+      theme: ThemeController.to.getTheme(),
+      home: datos["userLogin"] != null ? const MainMenuScreen() : SignInScreen(),
     );
   }
 }

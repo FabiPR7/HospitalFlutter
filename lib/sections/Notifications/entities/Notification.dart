@@ -2,7 +2,7 @@ class AppNotification {
   final String id;
   final String title;
   final String message;
-  final String type; // 'task', 'message', etc.
+  final String type;
   final String senderCode;
   final String receiverCode;
   final DateTime timestamp;

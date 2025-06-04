@@ -3,6 +3,7 @@ import 'package:mi_hospital/main.dart';
 import 'package:mi_hospital/sections/Notifications/entities/Notification.dart';
 import 'package:mi_hospital/sections/Notifications/infrastructure/NotificationFirebase.dart';
 import 'package:mi_hospital/sections/Notifications/presentation/notification_overlay.dart';
+import 'package:mi_hospital/appConfig/presentation/theme/Theme.dart';
 import 'package:flutter/material.dart';
 
 class PatientsFirebase {
@@ -50,6 +51,12 @@ class PatientsFirebase {
 
   Future<void> addPatient(Map<String, dynamic> paciente, {BuildContext? context}) async {
     try {
+      final snapshot = await _dbRef.child('patients').orderByChild('dni').equalTo(paciente['dni']).once();
+      
+      if (snapshot.snapshot.exists) {
+        throw Exception('Ya existe un paciente registrado con este DNI');
+      }
+
       final newPatientRef = _dbRef.child('patients').push();
       await newPatientRef.set({
         ...paciente,
@@ -57,7 +64,6 @@ class PatientsFirebase {
         'state': 'Baja',
       });
 
-      // Notificar a todos los usuarios activos sobre el nuevo paciente
       final staffList = GetData().getStaffList() as List;
       final activeStaff = staffList.where((staff) => 
         staff['state'] == true && 
@@ -67,7 +73,6 @@ class PatientsFirebase {
       for (var staff in activeStaff) {
         final staffCode = staff['codigo'] as String;
         
-        // No notificar al creador del paciente
         if (staffCode != GetData().getUserLogin()["codigo"]) {
           final notification = AppNotification(
             id: DateTime.now().millisecondsSinceEpoch.toString() + '_$staffCode',
@@ -83,7 +88,6 @@ class PatientsFirebase {
         }
       }
 
-      // Mostrar notificación flotante si hay contexto
       if (context != null) {
         NotificationOverlay().show(
           context: context,
@@ -91,11 +95,22 @@ class PatientsFirebase {
           message: 'Has ingresado un nuevo paciente: ${paciente["name"]} en la habitación ${paciente["roomName"]}',
           type: 'patient',
           onTap: () {
-            // TODO: Navegar a la vista del paciente
+            
           },
         );
       }
     } catch (e) {
+      if (context != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              e.toString().replaceAll('Exception: ', ''),
+              style: TextStyle(color: ThemeController.to.getTextColor()),
+            ),
+            backgroundColor: ThemeController.to.getErrorRed(),
+          ),
+        );
+      }
       throw e;
     }
   }

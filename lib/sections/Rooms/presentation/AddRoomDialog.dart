@@ -47,11 +47,11 @@ class _AddRoomDialogState extends State<AddRoomDialog> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: ThemeController.to.getCardColor(),
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: Colors.black.withOpacity(0.2),
                 spreadRadius: 2,
                 blurRadius: 10,
                 offset: const Offset(0, 3),
@@ -64,13 +64,13 @@ class _AddRoomDialogState extends State<AddRoomDialog> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: ThemeHospital.getButtonBlue().withOpacity(0.1),
+                  color: ThemeController.to.getButtonBlue().withOpacity(0.1),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.add_home_work, color: ThemeHospital.getButtonBlue(), size: 24),
+                    Icon(Icons.add_home_work, color: ThemeController.to.getButtonBlue(), size: 24),
                     const SizedBox(width: 8),
                     Flexible(
                       child: Text(
@@ -78,7 +78,7 @@ class _AddRoomDialogState extends State<AddRoomDialog> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: ThemeHospital.getButtonBlue(),
+                          color: ThemeController.to.getButtonBlue(),
                         ),
                       ),
                     ),
@@ -131,8 +131,9 @@ class _AddRoomDialogState extends State<AddRoomDialog> {
                     child: Text(
                       'Cancelar',
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: ThemeController.to.getErrorRed(),
                         fontSize: 14,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -140,17 +141,18 @@ class _AddRoomDialogState extends State<AddRoomDialog> {
                   ElevatedButton(
                     onPressed: _saveRoom,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: ThemeHospital.getButtonBlue(),
+                      backgroundColor: ThemeController.to.getButtonBlue(),
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Guardar',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
+                        color: ThemeController.to.getTextColor(),
                       ),
                     ),
                   ),
@@ -172,29 +174,30 @@ class _AddRoomDialogState extends State<AddRoomDialog> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: ThemeController.to.getSurfaceColor(),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: ThemeHospital.getButtonBlue().withOpacity(0.2),
+          color: ThemeController.to.getButtonBlue().withOpacity(0.2),
           width: 1,
         ),
       ),
       child: TextFormField(
         controller: controller,
+        style: TextStyle(color: ThemeController.to.getTextColor()),
         keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
         decoration: InputDecoration(
           labelText: label,
-          prefixIcon: Icon(icon, color: ThemeHospital.getButtonBlue()),
+          prefixIcon: Icon(icon, color: ThemeController.to.getButtonBlue()),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           labelStyle: TextStyle(
-            color: ThemeHospital.getButtonBlue().withOpacity(0.7),
+            color: ThemeController.to.getButtonBlue().withOpacity(0.7),
             fontSize: 16,
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: ThemeHospital.getButtonBlue(),
+              color: ThemeController.to.getButtonBlue(),
               width: 2,
             ),
           ),
@@ -220,9 +223,12 @@ class _AddRoomDialogState extends State<AddRoomDialog> {
     if (_floorController.text.isEmpty || 
         !RegExp(r'^[0-9]+$').hasMatch(_floorController.text)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('En Piso solo se pueden ingresar números'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: Text(
+            'En Piso solo se pueden ingresar números',
+            style: TextStyle(color: ThemeController.to.getTextColor()),
+          ),
+          backgroundColor: ThemeController.to.getErrorRed(),
         ),
       );
       return;
@@ -231,9 +237,12 @@ class _AddRoomDialogState extends State<AddRoomDialog> {
     if (_stretchesController.text.isEmpty || 
         !RegExp(r'^[0-9]+$').hasMatch(_stretchesController.text)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('En Número de Camillas solo se pueden ingresar números'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: Text(
+            'En Número de Camillas solo se pueden ingresar números',
+            style: TextStyle(color: ThemeController.to.getTextColor()),
+          ),
+          backgroundColor: ThemeController.to.getErrorRed(),
         ),
       );
       return;
@@ -251,8 +260,11 @@ class _AddRoomDialogState extends State<AddRoomDialog> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Habitación agregada exitosamente'),
-            backgroundColor: ThemeHospital.getButtonBlue(),
+            content: Text(
+              'Habitación agregada exitosamente',
+              style: TextStyle(color: ThemeController.to.getTextColor()),
+            ),
+            backgroundColor: ThemeController.to.getButtonBlue(),
           ),
         );
       }
@@ -260,8 +272,11 @@ class _AddRoomDialogState extends State<AddRoomDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString().replaceAll('Exception: ', '')),
-            backgroundColor: Colors.red,
+            content: Text(
+              e.toString().replaceAll('Exception: ', ''),
+              style: TextStyle(color: ThemeController.to.getTextColor()),
+            ),
+            backgroundColor: ThemeController.to.getErrorRed(),
           ),
         );
       }

@@ -14,7 +14,7 @@ class StaffFirebase {
         .child("users")
         .orderByChild("codigo")
         .startAt(prefix)
-        .endAt('$prefix\uf8ff') // búsqueda por prefijo
+        .endAt('$prefix\uf8ff') 
         .once();
 
     List<Map> results = [];

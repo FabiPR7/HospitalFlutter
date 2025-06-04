@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mi_hospital/appConfig/domain/sqlite/Sqlite.dart';
 import 'package:mi_hospital/sections/Sign_in/presentation/sign_in.dart';
+import 'package:mi_hospital/appConfig/presentation/theme/Theme.dart';
+import 'package:mi_hospital/sections/Settings/domain/notifications_controller.dart';
+import 'package:get/get.dart';
 
 class WidgetsSettings {
   static Future<void> _logout(BuildContext context) async {
@@ -46,14 +49,30 @@ class WidgetsSettings {
   }
 
   static Widget getBody() {
+    // Inicializar el controlador de notificaciones
+    if (!Get.isRegistered<NotificationsController>()) {
+      Get.put(NotificationsController());
+    }
+
     return Builder(
       builder: (context) => ListView(
         children: [
           const SizedBox(height: 16),
           getSeparator('Preferencias'),
-          getSwitchListTile('Notificaciones', true, (bool value) {}),
+          Obx(() => getSwitchListTile(
+            'Notificaciones',
+            NotificationsController.to.notificationsEnabled,
+            (bool value) => NotificationsController.to.toggleNotifications(),
+          )),
           getListTile('Cambiar la fuente', Icons.text_fields, () {}),
-          getListTile('Tema', Icons.brightness_6, () {}),
+          getListTile(
+            'Tema',
+            Icons.brightness_6,
+            () async {
+              await ThemeController.to.toggleTheme();
+              Get.forceAppUpdate();
+            },
+          ),
           getListTile('Idiomas', Icons.language, () {}),
 
           const Divider(),
@@ -117,12 +136,12 @@ class WidgetsSettings {
 
   static Widget getSeparator(String text) {
     return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            text,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        );
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Text(
+        text,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+    );
   }
 
   static Widget getSwitchListTile(String text, bool value, Function(bool) onChanged) {
@@ -130,6 +149,10 @@ class WidgetsSettings {
       title: Text(text),
       value: value,
       onChanged: onChanged,
+      activeColor: ThemeController.to.getButtonBlue(),
+      activeTrackColor: ThemeController.to.getLightBlue(),
+      inactiveThumbColor: ThemeController.to.getGrey(),
+      inactiveTrackColor: ThemeController.to.getLightGrey(),
     );
   }
 }

@@ -1,12 +1,12 @@
 
 class Room {
-  final String id; // ID único de la habitación (puede ser el código único que aparece en la base de datos)
-  final int available; // Número de camas disponibles
-  final String code; // Código de la habitación
-  final String department; // Departamento (ej. Pediatría)
-  final int floor; // Piso donde se encuentra la habitación
-  final String name; // Nombre de la habitación (ej. B2)
-  final int stretches; // Número de camillas en la habitación
+    final String id;
+  final int available;
+  final String code;
+  final String department;
+  final int floor;
+  final String name;
+  final int stretches;
 
 Room({
   required this.id,
@@ -21,7 +21,7 @@ Room({
 
  
 
-  // Método para convertir de un objeto Room a un Map (útil para escribir en Firebase)
+
   factory Room.fromMap(String id, Map<String, dynamic> data) {
   return Room(
     id: id,

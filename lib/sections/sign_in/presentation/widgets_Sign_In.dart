@@ -19,8 +19,8 @@ class WidgetsSignIn {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            ThemeHospital.getButtonBlue(),
-            ThemeHospital.getLightBlue(),
+            ThemeController.to.getButtonBlue(),
+            ThemeController.to.getLightBlue(),
           ],
         ),
         boxShadow: [
@@ -117,13 +117,13 @@ class WidgetsSignIn {
           ),
           labelText: text,
           labelStyle: TextStyle(
-            color: ThemeHospital.getButtonBlue().withOpacity(0.7),
+            color: ThemeController.to.getButtonBlue().withOpacity(0.7),
             fontSize: 16,
           ),
           errorStyle: const TextStyle(color: Colors.red),
           prefixIcon: Icon(
             text == "Correo" ? Icons.email : Icons.lock,
-            color: ThemeHospital.getButtonBlue(),
+            color: ThemeController.to.getButtonBlue(),
           ),
           filled: true,
           fillColor: Colors.white,
@@ -159,7 +159,7 @@ class WidgetsSignIn {
             end: Alignment.bottomRight,
             colors: [
               Colors.white,
-              ThemeHospital.getBackgroundBlue().withOpacity(0.1),
+              ThemeController.to.getBackgroundBlue().withOpacity(0.1),
             ],
           ),
           boxShadow: [
@@ -214,7 +214,7 @@ class WidgetsSignIn {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: ThemeHospital.getButtonBlue(),
+                    backgroundColor: ThemeController.to.getButtonBlue(),
                     minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -242,7 +242,7 @@ class WidgetsSignIn {
                   child: Text(
                     "¿No tienes una cuenta? Regístrate",
                     style: TextStyle(
-                      color: ThemeHospital.getButtonBlue(),
+                      color: ThemeController.to.getButtonBlue(),
                       fontSize: 14,
                     ),
                   ),
