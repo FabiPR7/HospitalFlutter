@@ -117,7 +117,7 @@ class WidgetsLogIn {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        color: ThemeController.to.isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -129,6 +129,9 @@ class WidgetsLogIn {
       child: TextFormField(
         controller: controller,
         obscureText: text == "Contraseña" || text == "Confirmar Contraseña",
+        style: TextStyle(
+          color: ThemeController.to.isDarkMode ? Colors.white : Colors.black,
+        ),
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -136,7 +139,9 @@ class WidgetsLogIn {
           ),
           labelText: text,
           labelStyle: TextStyle(
-            color: ThemeController.to.getButtonBlue().withOpacity(0.7),
+            color: ThemeController.to.isDarkMode 
+                ? Colors.white.withOpacity(0.7)
+                : ThemeController.to.getButtonBlue().withOpacity(0.7),
             fontSize: 16,
           ),
           errorStyle: const TextStyle(color: Colors.red),
@@ -145,10 +150,12 @@ class WidgetsLogIn {
             text == "Correo" ? Icons.email :
             text == "Contraseña" || text == "Confirmar Contraseña" ? Icons.lock :
             Icons.vpn_key,
-            color: ThemeController.to.getButtonBlue(),
+            color: ThemeController.to.isDarkMode 
+                ? Colors.white.withOpacity(0.7)
+                : ThemeController.to.getButtonBlue(),
           ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: ThemeController.to.isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
         ),
         validator: (value) {
@@ -178,8 +185,10 @@ class WidgetsLogIn {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white,
-              ThemeController.to.getBackgroundBlue().withOpacity(0.1),
+              ThemeController.to.isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
+              ThemeController.to.isDarkMode 
+                  ? const Color(0xFF2C2C2C)
+                  : ThemeController.to.getBackgroundBlue().withOpacity(0.1),
             ],
           ),
           boxShadow: [
