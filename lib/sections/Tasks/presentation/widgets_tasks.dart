@@ -296,49 +296,193 @@ class _WidgetsTaskState extends State<WidgetsTask> {
         String formattedDate = DateFormat('dd-MM-yy HH:mm').format(task.timestamp);
         Duration difference = DateTime.now().difference(task.timestamp);
         Color backgroundColor;
+        IconData timeIcon;
+        String timeStatus;
         if (difference.inHours >= 2) {
           backgroundColor = ThemeController.to.getTaskCardColor(2);
+          timeIcon = Icons.warning_amber_rounded;
+          timeStatus = 'Tardía';
         } else if (difference.inHours >= 1) {
           backgroundColor = ThemeController.to.getTaskCardColor(1);
+          timeIcon = Icons.access_time;
+          timeStatus = 'Próxima';
         } else {
           backgroundColor = ThemeController.to.getTaskCardColor(0);
+          timeIcon = Icons.access_time;
+          timeStatus = 'Reciente';
         }
         return Card(
-          color: backgroundColor,
+          elevation: 3,
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: InkWell(
-            onTap: () => _showTaskDetailsDialog(context, task),
-            borderRadius: BorderRadius.circular(12),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    task.description,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  Text('Paciente: ${GetDataTask().convertDnitoNamePatient(task.patientDni)}'),
-                  Text('Creado por: ${GetDataTask().convertCodetoNameStaff(task.createdBy)}'),
-                  Text('Asignado a: ${task.assignedTo == null ? "Sin asignar" : GetDataTask().convertCodetoNameStaff(task.assignedTo.toString())}'),
-                  Text('Fecha/Hora: $formattedDate'),
-                  if (!task.isDone && (task.assignedTo.toString().isEmpty || task.assignedTo == null))
-                    ElevatedButton( 
-                      onPressed: () => _showConfirmationDialog(context, task),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ThemeController.to.getButtonBlue(),
-                      ),
-                      child: const Text('Asignarme', style: TextStyle(color: Colors.white),),
-                    ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  backgroundColor.withOpacity(0.6),
+                  backgroundColor.withOpacity(0.7),
                 ],
+              ),
+              border: Border.all(
+                color: backgroundColor.withOpacity(0.7),
+                width: 1,
+              ),
+            ),
+            child: InkWell(
+              onTap: () => _showTaskDetailsDialog(context, task),
+              borderRadius: BorderRadius.circular(15),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: backgroundColor.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.task_alt,
+                            color: backgroundColor.withOpacity(0.9),
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            task.description,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: ThemeController.to.getTextColor(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: ThemeController.to.getBackgroundBlue().withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        children: [
+                          _buildTaskInfoRow(
+                            Icons.person_outline,
+                            'Paciente:',
+                            GetDataTask().convertDnitoNamePatient(task.patientDni),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildTaskInfoRow(
+                            Icons.person,
+                            'Creado por:',
+                            GetDataTask().convertCodetoNameStaff(task.createdBy),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildTaskInfoRow(
+                            Icons.assignment_ind,
+                            'Asignado a:',
+                            task.assignedTo == null ? "Sin asignar" : GetDataTask().convertCodetoNameStaff(task.assignedTo.toString()),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildTaskInfoRow(
+                            Icons.access_time,
+                            'Fecha/Hora:',
+                            formattedDate,
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (difference.inHours >= 1) ...[
+                                Icon(
+                                  timeIcon,
+                                  size: 16,
+                                  color: ThemeController.to.getButtonBlue(),
+                                ),
+                                const SizedBox(width: 4),
+                              ],
+                              Text(
+                                timeStatus,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: ThemeController.to.getButtonBlue(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (!task.isDone && (task.assignedTo.toString().isEmpty || task.assignedTo == null))
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: ElevatedButton(
+                          onPressed: () => _showConfirmationDialog(context, task),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ThemeController.to.getButtonBlue(),
+                            minimumSize: const Size(double.infinity, 40),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            'Asignarme',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildTaskInfoRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 16,
+          color: ThemeController.to.getTextColor().withOpacity(0.7),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: ThemeController.to.getTextColor().withOpacity(0.7),
+          ),
+        ),
+        const SizedBox(width: 4),
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              color: ThemeController.to.getTextColor(),
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
   

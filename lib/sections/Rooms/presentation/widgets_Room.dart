@@ -157,6 +157,7 @@ class WidgetsRoomState extends State<WidgetsRoom> {
 
   Widget buildRoomCard(Room room) {
     final occupied = (room.stretches - room.available).clamp(0, room.stretches);
+    final isAvailable = room.stretches != occupied;
 
     return GestureDetector(
       onTap: () {
@@ -174,25 +175,149 @@ class WidgetsRoomState extends State<WidgetsRoom> {
         );
       },
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 3,
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        color: room.stretches != occupied
-            ? ThemeController.to.getWhite()
-            : ThemeController.to.getErrorRed(),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getTextRoom(room, room.name, 20),
-              const SizedBox(height: 8),
-              getTextRoom(room, 'Departamento: ${room.department}', 14),
-              const SizedBox(height: 4),
-              getTextRoom(room, 'Piso: ${room.floor}', 14),
-              const SizedBox(height: 12),
-              getCardStretches(room),
-            ],
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: isAvailable 
+                  ? [
+                      ThemeController.to.getBackgroundBlue().withOpacity(0.1),
+                      ThemeController.to.getLightBlue().withOpacity(0.1),
+                    ]
+                  : [
+                      ThemeController.to.getErrorRed().withOpacity(0.05),
+                      ThemeController.to.getErrorRed().withOpacity(0.1),
+                    ],
+            ),
+            border: Border.all(
+              color: isAvailable 
+                  ? ThemeController.to.getLightBlue().withOpacity(0.2)
+                  : ThemeController.to.getErrorRed().withOpacity(0.2),
+              width: 1,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: isAvailable 
+                            ? ThemeController.to.getLightBlue().withOpacity(0.1)
+                            : ThemeController.to.getErrorRed().withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.meeting_room,
+                        color: isAvailable 
+                            ? ThemeController.to.getLightBlue()
+                            : ThemeController.to.getErrorRed(),
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            room.name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: isAvailable 
+                                  ? ThemeController.to.getLightBlue()
+                                  : ThemeController.to.getErrorRed(),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Departamento: ${room.department}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: ThemeController.to.getTextColor().withOpacity(0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: isAvailable 
+                            ? ThemeController.to.getLightBlue().withOpacity(0.1)
+                            : ThemeController.to.getErrorRed().withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: isAvailable 
+                              ? ThemeController.to.getLightBlue().withOpacity(0.3)
+                              : ThemeController.to.getErrorRed().withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.bed,
+                            size: 16,
+                            color: isAvailable 
+                                ? ThemeController.to.getLightBlue()
+                                : ThemeController.to.getErrorRed(),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${room.available}/${room.stretches}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: isAvailable 
+                                  ? ThemeController.to.getLightBlue()
+                                  : ThemeController.to.getErrorRed(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: ThemeController.to.getBackgroundBlue().withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.layers_outlined,
+                        size: 16,
+                        color: ThemeController.to.getTextColor().withOpacity(0.7),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Piso ${room.floor}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: ThemeController.to.getTextColor().withOpacity(0.7),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -52,6 +52,48 @@ class Tasksfirebase {
     return [];
   }
 
+  List<Task> getTasksFromSnapshot(DataSnapshot? snapshot, String codePrefix, {bool filterByPatient = false}) {
+    if (snapshot == null || !snapshot.exists || snapshot.value == null) {
+      return [];
+    }
+
+    if (snapshot.value is Map) {
+      final Map<String, dynamic> tasks = Map<String, dynamic>.from(snapshot.value as Map);
+      final userHospitalCode = GetData().getHospitalCode();
+      
+      final filteredTasks = tasks.entries.where((entry) {
+        final task = Map<String, dynamic>.from(entry.value);
+        final patientDni = task['patientDni'] as String;
+        
+        bool isFromCurrentHospital = false;
+        for (var patient in GetData().getPatients()) {
+          if (patient['dni'] == patientDni) {
+            isFromCurrentHospital = true;
+            break;
+          }
+        }
+        
+        if (filterByPatient) {
+          return isFromCurrentHospital && patientDni == codePrefix;
+        }
+        
+        return isFromCurrentHospital;
+      }).toList();
+
+      filteredTasks.sort((a, b) {
+        final aTime = DateTime.tryParse(a.value['timestamp'] ?? '') ?? DateTime(1900);
+        final bTime = DateTime.tryParse(b.value['timestamp'] ?? '') ?? DateTime(1900);
+        return aTime.compareTo(bTime);
+      });
+
+      return filteredTasks.map((entry) {
+        return Task.fromMap(entry.key, Map<String, dynamic>.from(entry.value));
+      }).toList();
+    }
+
+    return [];
+  }
+
   Future<void> add_task({
     required String description,
     required String patientDni,
