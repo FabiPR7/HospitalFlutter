@@ -33,7 +33,8 @@ class MyApp extends StatelessWidget {
       title: 'Mi Hospital',
       debugShowCheckedModeBanner: false,
       theme: ThemeController.to.getTheme(),
-      home: datos["userLogin"] != null ? const MainMenuScreen() : SignInScreen(),
+      home: datos["userLogin"] != null ? 
+      const MainMenuScreen() : SignInScreen(),
     );
   }
 }
